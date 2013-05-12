@@ -96,7 +96,7 @@ body {
 				conn.setAutoCommit(true);
 			}*/
 		 %>
-			<form class="form-signin" action="index.jsp" method="POST">
+			<form class="form-signin" action="signup.jsp" method="POST">
 				<h2 class="form-signin-heading">New Account</h2>
 				<input type="text" class="input-block-level" name="nam" placeholder="Name">
 				<select name="role">
@@ -121,7 +121,7 @@ body {
 		%>
 
 			<tr>
-				<form action="students.jsp" method="POST">
+				<form action="signup.jsp" method="POST">
 					<input type="hidden" name="action" value="update" /> <input
 						type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 
@@ -146,7 +146,7 @@ body {
 					<%-- Button --%>
 					<td><input type="submit" value="Update"></td>
 				</form>
-				<form action="index.jsp" method="POST">
+				<form action="signup.jsp" method="POST">
 					<input type="hidden" name="action" value="delete" /> <input
 						type="hidden" value="<%=rs.getInt("id")%>" name="id" />
 					<%-- Button --%>
