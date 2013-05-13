@@ -160,11 +160,6 @@ body {
 				Already have an account? <a href="/test/signin.jsp">Sign in
 					here.</a>
 			</form>
-
-			<%-- -------- Iteration Code -------- --%>
-		
-
-			<%-- This is a JSP Comment before JSP Scriplet --%>
 			<%-- -------- Close Connection Code -------- --%>
 			<%
 				rs.close();
