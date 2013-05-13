@@ -83,6 +83,7 @@ body {
 		 %>
 			<form class="form-signin" action="signup.jsp" method="POST">
 				<h2 class="form-signin-heading">New Account</h2>
+				<input type="hidden" name="action" value="insert" />
 				<input type="text" class="input-block-level" name="nam" placeholder="Name">
 				<select name="role">
 					<option value="Owner">Owner</option>
