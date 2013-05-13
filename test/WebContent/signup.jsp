@@ -67,7 +67,7 @@ body {
 			statement = conn.createStatement();
 		    rs = statement.executeQuery("select * from cse135.USERS");
 		    String action = request.getParameter("action");
-		
+		    
 		    // insertion
 		    if (action != null && action.equals("insert")) {
                 conn.setAutoCommit(false);
@@ -96,6 +96,10 @@ body {
 		 %>
 			<form class="form-signin" action="signup.jsp" method="POST">
 				<h2 class="form-signin-heading">New Account</h2>
+				<% if (session.getAttribute("username") != null) {
+			    	out.println ("You're already signed in, " + session.getAttribute("username") + ".");
+			    	out.println ("Are you trying to create another account?");
+			    } %>
 				<input type="hidden" name="action" value="insert" />
 				<input type="text" class="input-block-level" name="nam" placeholder="Name">
 				<select name="role">

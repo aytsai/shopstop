@@ -72,10 +72,10 @@ body {
 		    rs = statement.executeQuery("select * from cse135.USERS");
 		    String action = request.getParameter("action");
 		
-		    if (session.getAttribute("username") != null) {
-		    	out.println ("You're already signed in, " + session.getAttribute("username") + ".");
-		    }
 		    else {
+		    	if (session.getAttribute("username") != null) {
+			    	out.println ("You're already signed in, " + session.getAttribute("username") + ".");
+			    }
 			    // sign in
 			    if (action != null && action.equals("signin")) {
 	                conn.setAutoCommit(false);
