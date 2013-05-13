@@ -87,14 +87,6 @@ body {
                 conn.commit();
                 conn.setAutoCommit(true);
             }
-            /*if (action != null && action.equals("delete")) {
-				conn.setAutoCommit(false);
-				pstmt = conn.prepareStatement("DELETE FROM USERS WHERE id = ?");
-				pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
-				int rowCount = pstmt.executeUpdate();
-				conn.commit();
-				conn.setAutoCommit(true);
-			}*/
 		 %>
 			<form class="form-signin" action="signup.jsp" method="POST">
 				<h2 class="form-signin-heading">New Account</h2>
@@ -124,26 +116,14 @@ body {
 				<form action="signup.jsp" method="POST">
 					<input type="hidden" name="action" value="update" /> <input
 						type="hidden" name="id" value="<%=rs.getInt("id")%>" />
-
-					<%-- Get the id --%>
 					<td><%=rs.getInt("id")%></td>
-
-					<%-- Get the pid --%>
 					<td><input value="<%=rs.getString("nam")%>" name="nam"
 						size="15" /></td>
-
-					<%-- Get the first name --%>
 					<td><input value="<%=rs.getString("role")%>" name="role"
 						size="15" /></td>
-
-					<%-- Get the middle name --%>
 					<td><input value="<%=rs.getInt("age")%>" name="age" size="15" /></td>
-
-					<%-- Get the last name --%>
 					<td><input value="<%=rs.getString("sta")%>" name="sta"
 						size="15" /></td>
-
-					<%-- Button --%>
 					<td><input type="submit" value="Update"></td>
 				</form>
 				<form action="signup.jsp" method="POST">
