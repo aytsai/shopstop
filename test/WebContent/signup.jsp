@@ -69,16 +69,29 @@ body {
 		    String action = request.getParameter("action");
 		
 		    // insertion
-            if (action != null && action.equals("insert")) {
+		    if (action != null && action.equals("insert")) {
                 conn.setAutoCommit(false);
-                pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
-                pstmt.setString(1, request.getParameter("nam"));
-                pstmt.setString(2, request.getParameter("role"));
-                pstmt.setInt(3, Integer.parseInt(request.getParameter("age")));
-                pstmt.setString(4, request.getParameter("sta"));
-                int rowCount = pstmt.executeUpdate();
-                conn.commit();
-                conn.setAutoCommit(true);
+                conn.setAutoCommit(false);
+                PreparedStatement check = null;
+                // check for duplicate name
+                check = conn.prepareStatement("SELECT * FROM cse135.USERS WHERE nam='" +
+                		request.getParameter("nam") + "'");
+                check.execute();
+                ResultSet resultSet = check.getResultSet(); //result set for records
+				boolean recordFound = resultSet.next();
+                if (recordFound == false) {
+	                pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
+	                pstmt.setString(1, request.getParameter("nam"));
+	                pstmt.setString(2, request.getParameter("role"));
+	                pstmt.setInt(3, Integer.parseInt(request.getParameter("age")));
+	                pstmt.setString(4, request.getParameter("sta"));
+	                int rowCount = pstmt.executeUpdate();
+	                conn.commit();
+	                conn.setAutoCommit(true);
+                }
+                else {
+                	// report error
+                }
             }
 		 %>
 			<form class="form-signin" action="signup.jsp" method="POST">
@@ -90,8 +103,7 @@ body {
 					<option value="Customer">Customer</option>
 				</select>
 				<input type="text" class="input-block-level" name="age" placeholder="Age">
-				<select name="sta"> 
-					<option value="" selected="selected">Select a State</option> 
+				<select name="sta">
 					<option value="AL">Alabama</option> 
 					<option value="AK">Alaska</option> 
 					<option value="AZ">Arizona</option> 
