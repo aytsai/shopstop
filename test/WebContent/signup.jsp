@@ -51,16 +51,10 @@ body {
     <![endif]-->
 
 </head>
-
 <body>
-
 	<div class="container">
-
-
 		<%-- Import the java.sql package --%>
 		<%@ page import="java.sql.*"%>
-
-
 		<%
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -72,9 +66,8 @@ body {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
 		    rs = statement.executeQuery("select * from cse135.USERS");
-		    
 		    String action = request.getParameter("action");
-		    
+		
 		    // insertion
             if (action != null && action.equals("insert")) {
                 conn.setAutoCommit(false);
