@@ -73,7 +73,7 @@ body {
 		    String action = request.getParameter("action");
 		
 		    if (session.getAttribute("username") != null) {
-		    	out.println ("Hi " + session.getAttribute("username"));
+		    	out.println ("You're already signed in, " + session.getAttribute("username") + ".");
 		    }
 		    else {
 			    // sign in
@@ -94,7 +94,6 @@ body {
 	                	session.setAttribute("username", request.getParameter("nam"));
 	                }
 			    }
-	        }
 		 %>
 			<input type="text" class="input-block-level" name="nam"
 				placeholder="Name"> <input type="hidden" name="action"
@@ -105,6 +104,7 @@ body {
 				in</button>
 			No account? <a href="/test/signup.jsp">Sign up here.</a>
 			<%
+	       		}
 				rs.close();
 				statement.close();
 				conn.close();
