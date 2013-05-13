@@ -101,36 +101,7 @@ body {
 			</form>
 
 			<%-- -------- Iteration Code -------- --%>
-			<%
-			// Iterate over the ResultSet
-				while (rs.next()) {
-		%>
-
-			<tr>
-				<form action="signup.jsp" method="POST">
-					<input type="hidden" name="action" value="update" /> <input
-						type="hidden" name="id" value="<%=rs.getInt("id")%>" />
-					<td><%=rs.getInt("id")%></td>
-					<td><input value="<%=rs.getString("nam")%>" name="nam"
-						size="15" /></td>
-					<td><input value="<%=rs.getString("role")%>" name="role"
-						size="15" /></td>
-					<td><input value="<%=rs.getInt("age")%>" name="age" size="15" /></td>
-					<td><input value="<%=rs.getString("sta")%>" name="sta"
-						size="15" /></td>
-					<td><input type="submit" value="Update"></td>
-				</form>
-				<form action="signup.jsp" method="POST">
-					<input type="hidden" name="action" value="delete" /> <input
-						type="hidden" value="<%=rs.getInt("id")%>" name="id" />
-					<%-- Button --%>
-					<td><input type="submit" value="Delete" /></td>
-				</form>
-			</tr>
-
-			<%
-			}
-		%>
+		
 
 			<%-- This is a JSP Comment before JSP Scriplet --%>
 			<%-- -------- Close Connection Code -------- --%>
