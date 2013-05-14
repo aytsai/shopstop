@@ -51,7 +51,12 @@
           <a class="brand" href="#">ShopStop</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              Logged in as <% out.print(session.getAttribute("username")); %>
+              <% if (session.getAttribute("username") != null) {
+            	  out.print("Logged in as " + session.getAttribute("username") + " ");
+    		      out.print("<a href='/test/signout.jsp'>Log out?</a>");
+                }else
+                  out.print("<a href='/test/signin.jsp'>Log in</a>");
+    		%>
             </p>
             <ul class="nav">
               <li class="active"><a href="/test/">Home</a></li>

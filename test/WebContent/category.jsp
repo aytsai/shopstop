@@ -36,7 +36,7 @@
 	                <th>Name</th>
 	                <th>Description</th>
 	            </tr>
-	
+
 	            <tr>
 	                <form action="category.jsp" method="POST">
 	                    <input type="hidden" name="action" value="insert"/>

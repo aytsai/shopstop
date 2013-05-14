@@ -11,5 +11,9 @@ You've been signed out.
 <%
 session.setAttribute("username", null);
 %>
+<br />
+<br />
+<a href="/test/">Return to main page</a>
+
 </body>
 </html>
