@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title>ShopStop - One Stop Shopping, For You!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -48,15 +48,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Project name</a>
+          <a class="brand" href="#">ShopStop</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Username</a>
+              Logged in as <% out.print(session.getAttribute("username")); %>
             </p>
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li class="active"><a href="/test/">Home</a></li>
+              <li><a href="/test/signup.jsp">Sign Up</a></li>
+              <li><a href="/test/signin.jsp">Log In</a></li>
+              <li><a href="/test/signout.jsp">Log Out</a></li>
+              <li><a href="/test/category.jsp">Categories</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
