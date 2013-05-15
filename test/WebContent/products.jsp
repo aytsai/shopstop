@@ -79,9 +79,29 @@
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
-		    rs = statement.executeQuery("select * from cse135.PRODUCTS");
-		    String action = request.getParameter("action");
-		
+			rs = statement.executeQuery("select * from cse135.PRODUCTS");
+			String action = request.getParameter("action");
+			
+			if (action != null && action.equals("search")) {
+				session.setAttribute("search", request.getParameter("nam"));
+			}
+			
+			if (session.getAttribute("cat") != null && session.getAttribute("search") != null) {
+				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
+						session.getAttribute("cat") + "' AND name = '" + session.getAttribute("search") + "'");
+			}
+			else if (session.getAttribute("cat") != null && session.getAttribute("search") == null) {
+				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
+					session.getAttribute("cat") + "'");
+			}
+			else if (session.getAttribute("cat") == null && session.getAttribute("search") != null) {
+				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE name = '" +
+						session.getAttribute("search") + "'");
+			}
+			else {
+				rs = statement.executeQuery("select * from cse135.PRODUCTS");
+			}
+				
 		   	if (session.getAttribute("username") != null) {
 		   		out.println ("Hello " + session.getAttribute("username"));
 				if (session.getAttribute("role").equals("Owner")) {
@@ -139,12 +159,19 @@
 		            PreparedStatement check5 = conn.prepareStatement(
 	                		"SELECT * FROM CATEGORY");
 		            check5.execute();
-		            ResultSet resultset5 = check5.getResultSet();
+		            ResultSet resultSet5 = check5.getResultSet();
+		            out.println ("<br>All Products<br>");
 		            while (resultSet5.next()) {
-		            	out.println ("<a href=/"products.jsp/"> </a>")
+		            	out.println ("- " + resultSet5.getString("nam") + "<br>");
 		            }
 		            
 			%>
+				<form action="products.jsp" method="POST">
+					<input type="hidden" name="action" value="search" />
+					<input value="" name="nam" size="10"/>
+					<td><input type="submit" value="Search" /></td>
+				</form>
+			
 				<table border="1">
 	            <tr>
 	                <th>ID</th>
