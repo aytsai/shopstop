@@ -86,6 +86,7 @@
 				session.setAttribute("search", request.getParameter("nam"));
 			}
 			
+			out.println ( session.getAttribute("search") + " " + session.getAttribute("category"));
 			if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
 					&& session.getAttribute("search") != null) {
 				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
@@ -106,6 +107,8 @@
 				
 		   	if (session.getAttribute("username") != null) {
 				if (session.getAttribute("role").equals("Owner")) {
+					out.println ( session.getAttribute("search") + " " + session.getAttribute("category"));
+					
 					if (action != null && action.equals("insert")) {
 						conn.setAutoCommit(false);
 						pstmt = conn.prepareStatement(

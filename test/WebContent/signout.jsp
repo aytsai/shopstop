@@ -25,6 +25,5 @@ session.setAttribute("username", null);
 		Click <a href="/test/">here</a> to return to the main page, or simply
 		wait a couple seconds to be redirected.
 	</p>
-  <!--  This is a comment -->
 </body>
 </html>
