@@ -47,8 +47,8 @@
 					if (action != null && action.equals("update")) {
 						conn.setAutoCommit(false);
 						pstmt = conn.prepareStatement(
-								"UPDATE PRODUCTS SET nam = ?, sku = ?, cat = ?, price = ? WHERE id = ?");
-						pstmt.setString(1, request.getParameter("name"));
+								"UPDATE PRODUCTS SET name = ?, sku = ?, cat = ?, price = ? WHERE id = ?");
+						pstmt.setString(1, request.getParameter("nam"));
 						pstmt.setString(2, request.getParameter("sku"));
 
 						// find category id
@@ -68,7 +68,7 @@
 					}
 		            if (action != null && action.equals("delete")) {
 						conn.setAutoCommit(false);
-						pstmt = conn.prepareStatement("DELETE FROM CATEGORY WHERE id = ?");
+						pstmt = conn.prepareStatement("DELETE FROM PRODUCTS WHERE id = ?");
 						pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
