@@ -81,6 +81,7 @@
 			statement = conn.createStatement();
 			rs = statement.executeQuery("select * from cse135.PRODUCTS");
 			String action = request.getParameter("action");
+			session.setAttribute("category", "all");
 			
 			if (action != null && action.equals("search")) {
 				session.setAttribute("search", request.getParameter("nam"));
