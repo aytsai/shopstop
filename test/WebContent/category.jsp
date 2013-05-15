@@ -21,14 +21,6 @@
 		    String action = request.getParameter("action");
 		
 		   	if (session.getAttribute("username") != null) {
-		   		// check if the user is an owner
-		   		/*PreparedStatement check = null;
-	            check = conn.prepareStatement("SELECT * FROM cse135.USERS WHERE nam='" +
-	            		session.getAttribute("username") + "'");
-	            check.execute();
-	            ResultSet resultSet = check.getResultSet(); //result set for records
-				resultSet.next();
-				if ((resultSet.getString("role")).equals("Owner")) {*/
 				if (session.getAttribute("role").equals("Owner")) {
 					if (action != null && action.equals("insert")) {
 		                conn.setAutoCommit(false);
@@ -36,15 +28,25 @@
 		                		"INSERT INTO CATEGORY (nam, description, own) VALUES (?, ?, ?)");
 		                pstmt.setString(1, request.getParameter("nam"));
 		                pstmt.setString(2, request.getParameter("description"));
-		                
-		               
-		                pstmt.setInt(3, );
+		                pstmt.setInt(3, Integer.parseInt(request.getParameter("id"));
 		                int rowCount = pstmt.executeUpdate();
 		                conn.commit();
 		                conn.setAutoCommit(true);
 		            }
+					if (action != null && action.equals("update")) {
+						conn.setAutoCommit(false);
+						pstmt = conn.prepareStatement(
+								"UPDATE CATEGORY SET nam = ?, desc = ? WHERE id = ?");
+						pstmt.setString(1, request.getParameter("nam"));
+						pstmt.setString(2, request.getParameter("desc"));
+						pstmt.setInt(3, Integer.parseInt(request.getParameter("id")));
+						int rowCount = pstmt.executeUpdate();
+						conn.commit();
+						conn.setAutoCommit(true);
+					}
 		            if (action != null && action.equals("delete")) {
 		            	// does NOT have the product check yet
+		            	// if there's a product referring to this category, there is no delete button
 						conn.setAutoCommit(false);
 						pstmt = conn.prepareStatement("DELETE FROM CATEGORY WHERE id = ?");
 						pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
