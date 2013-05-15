@@ -75,7 +75,34 @@
 			                    <th><input type="submit" value="Insert"/></th>
 			                </form>
 			            </tr>
-			            </table>
+			      <%
+			// Iterate over the ResultSet
+				while (rs.next()) {
+		%>
+
+		<tr>
+			<form action="products.jsp" method="POST">
+				<input type="hidden" name="action" value="update" /> <input
+					type="hidden" name="id" value="<%=rs.getInt("id")%>" />
+				<td><%=rs.getInt("id")%></td>
+				<td><input value="<%=rs.getString("nam")%>" name="nam"
+					size="15" /></td>
+				<td><input value="<%=rs.getString("description")%>" name="description"
+					size="15" /></td>
+				<%-- Button --%>
+				<td><input type="submit" value="Update"></td>
+			</form>
+			<form action="products.jsp" method="POST">
+				<input type="hidden" name="action" value="delete" /> <input
+					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
+				<%-- Button --%>
+				<td><input type="submit" value="Delete" /></td>
+			</form>
+		</tr>
+		<%
+			}
+		%>
+		</table>
 					<%
 				}
 				else {

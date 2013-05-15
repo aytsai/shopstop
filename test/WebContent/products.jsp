@@ -66,7 +66,7 @@
 			conn.close();
 		} catch (Exception e) {
 			System.out.println (e);
-			System.out.println ("also you suck?!?!");
+			System.out.println ("also you suck?!?!?!?!?!?");
 		}
 	%>
 </body>
