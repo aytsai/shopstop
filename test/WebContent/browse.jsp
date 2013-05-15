@@ -88,29 +88,56 @@
 			statement = conn.createStatement();
 		    rs = statement.executeQuery("select * from cse135.PRODUCTS");
 		    String action = request.getParameter("action");
+		    
+		    
+		    session.setAttribute("category", "all");
+			session.setAttribute("search", null);
+			if (request.getParameter("category") != null) session.setAttribute("category", request.getParameter("category"));
+			if (request.getParameter("search") != null) session.setAttribute("search", request.getParameter("search"));
+			
+			if (action != null && action.equals("search")) {
+				session.setAttribute("search", request.getParameter("nam"));
+			}
+			
+			if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
+					&& session.getAttribute("search") != null) {
+				PreparedStatement check7 = conn.prepareStatement(
+                		"SELECT * FROM CATEGORY WHERE nam='" + session.getAttribute("category") + "'");
+				check7.execute();
+        		ResultSet resultSet7 = check7.getResultSet(); //result set for records
+				resultSet7.next();
+				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
+						resultSet7.getString("id") + "' AND name = '" + session.getAttribute("search") + "'");
+			}
+			else if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
+						&& session.getAttribute("search") == null) {
+				PreparedStatement check7 = conn.prepareStatement(
+                		"SELECT * FROM CATEGORY WHERE nam='" + session.getAttribute("category") + "'");
+				check7.execute();
+        		ResultSet resultSet7 = check7.getResultSet(); //result set for records
+				resultSet7.next();
+				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
+					resultSet7.getString("id") + "'");
+			}
+			else if (session.getAttribute("category").equals("all") && session.getAttribute("search") != null) {
+				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE name = '" +
+						session.getAttribute("search") + "'");
+			}
+			else {
+				rs = statement.executeQuery("select * from cse135.PRODUCTS");
+			}
+		    
 		
 		   	if (session.getAttribute("username") != null) {
-		   		// check if the user is an owner
-		   		/*PreparedStatement check = null;
-	            check = conn.prepareStatement("SELECT * FROM cse135.USERS WHERE nam='" +
-	            		session.getAttribute("username") + "'");
-	            check.execute();
-	            ResultSet resultSet = check.getResultSet(); //result set for records
-				resultSet.next();
-				if ((resultSet.getString("role")).equals("Customer")) {*/
 				if (session.getAttribute("role").equals("Customer")) {
 			%>
 				you've lost the game! D:  
 			<%
 				}
 				else {
-					
-					
 					out.println ("<div style=\"text-align:center;\">Sorry, you aren't a customer, so you can't access this page :3</div>");
 					String s = "<br><img style=\"display:block;margin-left:auto;margin-right:auto\" src=\"https://dl.dropboxusercontent.com/u/76520097/cat.gif\" >";
 					out.println(s);
-					
-					
 				}
 		   	}
 		   	else {
