@@ -30,27 +30,53 @@
 				resultSet.next();
 				if ((resultSet.getString("role")).equals("Owner")) {*/
 				if (session.getAttribute("role").equals("Owner")) {
-			%>
-				<table border="1">
-	            <tr>
-	                <th>ID</th>
-	                <th>Name</th>
-	                <th>Description</th>
-	            </tr>
-
-	            <tr>
-	                <form action="category.jsp" method="POST">
-	                    <input type="hidden" name="action" value="insert"/>
-	                    <th>&nbsp;</th>
-	                    <th><input value="" name="pid" size="10"/></th>
-	                    <th><input value="" name="first" size="15"/></th>
-	                    <th><input value="" name="middle" size="15"/></th>
-	                    <th><input value="" name="last" size="15"/></th>
-	                    <th><input type="submit" value="Insert"/></th>
-	                </form>
-	            </tr>
-	            </table>
-			<%
+					if (action != null && action.equals("insert")) {
+		                conn.setAutoCommit(false);
+		                pstmt = conn.prepareStatement(
+		                		"INSERT INTO CATEGORY (nam, description, own) VALUES (?, ?, ?)");
+		                pstmt.setString(1, request.getParameter("nam"));
+		                pstmt.setString(2, request.getParameter("description"));
+		                
+		                // get the owner id
+		                PreparedStatement check = conn.prepareStatement(
+		                		"SELECT * FROM cse135.CATEGORY WHERE nam='" +
+	            				session.getAttribute("username") + "'");
+	            		check.execute();
+	            		ResultSet resultSet = check.getResultSet(); //result set for records
+						resultSet.next();
+		                pstmt.setInt(3, resultSet.getInt("id"));
+		                int rowCount = pstmt.executeUpdate();
+		                conn.commit();
+		                conn.setAutoCommit(true);
+		            }
+		            if (action != null && action.equals("delete")) {
+		            	// does NOT have the product check yet
+						conn.setAutoCommit(false);
+						pstmt = conn.prepareStatement("DELETE FROM USERS WHERE id = ?");
+						pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
+						int rowCount = pstmt.executeUpdate();
+						conn.commit();
+						conn.setAutoCommit(true);
+					}
+					%>
+						<table border="1">
+			            <tr>
+			                <th>ID</th>
+			                <th>Name</th>
+			                <th>Description</th>
+			            </tr>
+		
+			            <tr>
+			                <form action="category.jsp" method="POST">
+			                    <input type="hidden" name="action" value="insert"/>
+			                    <th>&nbsp;</th>
+			                    <th><input value="" name="Name" size="15"/></th>
+			                    <th><input value="" name="description" size="15"/></th>
+			                    <th><input type="submit" value="Insert"/></th>
+			                </form>
+			            </tr>
+			            </table>
+					<%
 				}
 				else {
 					out.println ("Sorry, you aren't an owner, so you can't access this page.");
