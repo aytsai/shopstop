@@ -81,8 +81,7 @@
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
-		    rs = statement.executeQuery("select * from cse135.CATEGORY WHERE own = " +
-												session.getAttribute("userid").toString());
+		    rs = statement.executeQuery("select * from cse135.CATEGORY");
 		    String action = request.getParameter("action");
 		
 		   	if (session.getAttribute("username") != null) {
@@ -150,13 +149,17 @@
 				<td><input value="<%=rs.getString("nam")%>" name="nam" size="15" /></td>
 				<td><input value="<%=rs.getString("description")%>" name="description" size="15" /></td>
 				<%-- Button --%>
+		<%   if (rs.getInt("own") == (Integer) session.getAttribute("userid")) { %>
 				<td><input type="submit" value="Update"></td>
+		<%   } %>
 			</form>
 			<form action="category.jsp" method="POST">
 				<input type="hidden" name="action" value="delete" /> <input
 					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
 				<%-- Button --%>
+		<%   if (rs.getInt("own") == (Integer) session.getAttribute("userid")) { %>
 				<td><input type="submit" value="Delete" /></td>
+		<%   } %>
 			</form>
 		</tr>
 		<%
