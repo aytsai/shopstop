@@ -125,6 +125,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
+						response.sendRedirect("/test/products.jsp");
 		            }
 					if (action != null && action.equals("update")) {
 						conn.setAutoCommit(false);
@@ -147,6 +148,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
+						response.sendRedirect("/test/products.jsp");
 					}
 		            if (action != null && action.equals("delete")) {
 						conn.setAutoCommit(false);
@@ -155,6 +157,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
+						response.sendRedirect("/test/products.jsp");
 					}
 		            PreparedStatement check5 = conn.prepareStatement(
 	                		"SELECT * FROM CATEGORY");

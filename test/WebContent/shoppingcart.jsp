@@ -97,6 +97,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
+						response.sendRedirect("/test/shoppingcart.jsp");
 					}
 					%>
 						<table border="1">

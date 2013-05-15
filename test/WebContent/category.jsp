@@ -98,6 +98,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
+						response.sendRedirect("/test/category.jsp");
 		            }
 					if (action != null && action.equals("update")) {
 						conn.setAutoCommit(false);
@@ -109,6 +110,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
+						response.sendRedirect("/test/category.jsp");
 					}
 		            if (action != null && action.equals("delete")) {
 		            	// does NOT have the product check yet
@@ -119,6 +121,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
+						response.sendRedirect("/test/category.jsp");
 					}
 					%>
 						<table border="1">
