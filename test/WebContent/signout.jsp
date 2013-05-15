@@ -5,6 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Signed out</title>
+
+<script LANGUAGE="JavaScript">
+var t=setTimeout(function(){window.location = "/test/"},2000);
+</script>
+
 </head>
 <body>
 You've been signed out.
@@ -13,7 +18,7 @@ session.setAttribute("username", null);
 %>
 <br />
 <br />
-<a href="/test/">Return to main page</a>
+<a href="/test/">Return to main page</a>, or simply wait a couple seconds.
 
 </body>
 </html>
