@@ -86,15 +86,17 @@
 				session.setAttribute("search", request.getParameter("nam"));
 			}
 			
-			if (session.getAttribute("cat") != null && session.getAttribute("search") != null) {
+			if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
+					&& session.getAttribute("search") != null) {
 				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
-						session.getAttribute("cat") + "' AND name = '" + session.getAttribute("search") + "'");
+						session.getAttribute("category") + "' AND name = '" + session.getAttribute("search") + "'");
 			}
-			else if (session.getAttribute("cat") != null && session.getAttribute("search") == null) {
+			else if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
+						&& session.getAttribute("search") == null) {
 				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
-					session.getAttribute("cat") + "'");
+					session.getAttribute("category") + "'");
 			}
-			else if (session.getAttribute("cat") == null && session.getAttribute("search") != null) {
+			else if (session.getAttribute("category").equals("all") && session.getAttribute("search") != null) {
 				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE name = '" +
 						session.getAttribute("search") + "'");
 			}
@@ -103,7 +105,6 @@
 			}
 				
 		   	if (session.getAttribute("username") != null) {
-		   		out.println ("Hello " + session.getAttribute("username"));
 				if (session.getAttribute("role").equals("Owner")) {
 					if (action != null && action.equals("insert")) {
 						conn.setAutoCommit(false);
@@ -162,8 +163,10 @@
 		            PreparedStatement check5 = conn.prepareStatement(
 	                		"SELECT * FROM CATEGORY");
 		            check5.execute();
-		            ResultSet resultSet5 = check5.getResultSet();
-		            out.println ("<br>All Products<br>");
+		            ResultSet resultSet5 = check5.getResultSet(); %>
+		            <a href="products.jsp" onclick=<% session.setAttribute("category", "all");
+		            								  session.setAttribute("search", null);%> >All Products</a><br>
+		    <%
 		            while (resultSet5.next()) {
 		            	out.println ("- " + resultSet5.getString("nam") + "<br>");
 		            }
