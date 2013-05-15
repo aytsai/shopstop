@@ -60,9 +60,13 @@
             <ul class="nav">
               <li><a href="/test/">Home</a></li>
               <li><a href="/test/signup.jsp">Sign Up</a></li>
+              <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
+              <% } %>
               <li class="active"><a href="/test/products.jsp">Products</a></li>
+              <% if (session.getAttribute("role").equals("Customer")){ %>
               <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
+              <% } %>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -269,7 +273,13 @@
 		<%
 				}
 				else {
-					out.println ("Sorry, you aren't an owner, so you can't access this page.");
+					rs = statement.executeQuery("SELECT * FROM cse135.PRODUCTS");
+					while (rs.next()){
+					%>
+						<a href="/test/productview.jsp?<%=Integer.toString(rs.getInt("id"))%>"><%=rs.getString("name") %></a>
+						<br>
+					<% 
+					}
 				}
 		   	}
 		   	else {
