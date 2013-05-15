@@ -143,7 +143,7 @@
 		            }
 		            
 			%>
-				<form action="products.jsp" method="POST">
+				<form action="browse.jsp" method="POST">
 					<input type="hidden" name="action" value="search" />
 					<input value="" name="nam" size="10"/>
 					<td><input type="submit" value="Search" /></td>
@@ -165,8 +165,12 @@
 		<tr>
 				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 				<td><%=rs.getInt("id")%></td>
-				<td><input value="<%=rs.getString("name")%>" name="nam" size="15" /></td>
-				<td><input value="<%=rs.getString("sku")%>" name="sku" size="15" /></td>
+				<td>
+					<%  String link2 = "order.jsp?product=" + rs.getString("name");
+			        	out.println ("<a href=" + link2 + ">" + rs.getString("name") + "</a><br>");
+					%>
+				</td>
+				<td><%=rs.getString("sku")%></td>
 				<%	PreparedStatement check4 = conn.prepareStatement(
 		        		"SELECT * FROM CATEGORY WHERE id='" +
 		        		rs.getInt("cat") + "'");
@@ -174,8 +178,8 @@
 					ResultSet resultSet4 = check4.getResultSet(); //result set for records
 					resultSet4.next();
 				%>
-				<th><input value="<%=resultSet4.getString("nam")%>" name="category" size="15" /></th>
-				<td><input value="<%=rs.getInt("price")%>" name="price" size="15" /></td>
+				<th><%=resultSet4.getString("nam")%></th>
+				<td><%=rs.getInt("price")%></td>
 		</tr>
 		<%
 			}
