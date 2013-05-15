@@ -47,7 +47,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="/test/">ShopStop</a>
+          <a class="brand" href="#">ShopStop</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
               <% if (session.getAttribute("username") != null) {
@@ -60,13 +60,9 @@
             <ul class="nav">
               <li><a href="/test/">Home</a></li>
               <li><a href="/test/signup.jsp">Sign Up</a></li>
-              <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
-              <% } %>
               <li class="active"><a href="/test/products.jsp">Products</a></li>
-              <% if (session.getAttribute("role").equals("Customer")){ %>
               <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
-              <% } %>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -85,22 +81,35 @@
 			statement = conn.createStatement();
 			rs = statement.executeQuery("select * from cse135.PRODUCTS");
 			String action = request.getParameter("action");
+			
 			session.setAttribute("category", "all");
+			session.setAttribute("search", null);
+			if (request.getParameter("category") != null) session.setAttribute("category", request.getParameter("category"));
+			if (request.getParameter("search") != null) session.setAttribute("search", request.getParameter("search"));
 			
 			if (action != null && action.equals("search")) {
 				session.setAttribute("search", request.getParameter("nam"));
 			}
 			
-			out.println ( session.getAttribute("search") + " " + session.getAttribute("category"));
 			if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
 					&& session.getAttribute("search") != null) {
+				PreparedStatement check7 = conn.prepareStatement(
+                		"SELECT * FROM CATEGORY WHERE nam='" + session.getAttribute("category") + "'");
+				check7.execute();
+        		ResultSet resultSet7 = check7.getResultSet(); //result set for records
+				resultSet7.next();
 				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
-						session.getAttribute("category") + "' AND name = '" + session.getAttribute("search") + "'");
+						resultSet7.getString("id") + "' AND name = '" + session.getAttribute("search") + "'");
 			}
 			else if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
 						&& session.getAttribute("search") == null) {
+				PreparedStatement check7 = conn.prepareStatement(
+                		"SELECT * FROM CATEGORY WHERE nam='" + session.getAttribute("category") + "'");
+				check7.execute();
+        		ResultSet resultSet7 = check7.getResultSet(); //result set for records
+				resultSet7.next();
 				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE cat = '" +
-					session.getAttribute("category") + "'");
+					resultSet7.getString("id") + "'");
 			}
 			else if (session.getAttribute("category").equals("all") && session.getAttribute("search") != null) {
 				rs = statement.executeQuery("select * from cse135.PRODUCTS WHERE name = '" +
@@ -112,8 +121,6 @@
 				
 		   	if (session.getAttribute("username") != null) {
 				if (session.getAttribute("role").equals("Owner")) {
-					out.println ( session.getAttribute("search") + " " + session.getAttribute("category"));
-					
 					if (action != null && action.equals("insert")) {
 						conn.setAutoCommit(false);
 						pstmt = conn.prepareStatement(
@@ -172,11 +179,11 @@
 	                		"SELECT * FROM CATEGORY");
 		            check5.execute();
 		            ResultSet resultSet5 = check5.getResultSet(); %>
-		            <a href="products.jsp" onclick=<% session.setAttribute("category", "all");
-		            								  session.setAttribute("search", null);%> >All Products</a><br>
+		            <a href="products.jsp?category=all">All Products</a><br>
 		    <%
 		            while (resultSet5.next()) {
-		            	out.println ("- " + resultSet5.getString("nam") + "<br>");
+		            	String link = "products.jsp?category=" + resultSet5.getString("nam");
+		            	out.println ("<a href=" + link + ">" + resultSet5.getString("nam") + "</a><br>");
 		            }
 		            
 			%>
@@ -201,7 +208,14 @@
 	                    <th>&nbsp;</th>
 	                    <th><input value="" name="nam" size="10"/></th>
 	                    <th><input value="" name="sku" size="15"/></th>
-	                    <th><input value="" name="category" size="15"/></th>
+	                    <!-- <th><input value="" name="category" size="15"/></th> -->
+	                    <th><select name="category">
+	                    <% check5 = conn.prepareStatement("SELECT * FROM CATEGORY");
+			               check5.execute();
+	                       resultSet5 = check5.getResultSet(); 
+	                       while (resultSet5.next()) {
+	                       		out.println ("<option value>" + resultSet5.getString("nam") + "</option>");
+	                       } %></th>
 	                    <th><input value="" name="price" size="15"/></th>
 	                    <th><input type="submit" value="Insert"/></th>
 	                </form>
@@ -225,7 +239,16 @@
 					ResultSet resultSet4 = check4.getResultSet(); //result set for records
 					resultSet4.next();
 				%>
-				<td><input value="<%=resultSet4.getString("nam")%>" name="category" size="15" /></td>
+				<th><select name="category">
+	            <% check5 = conn.prepareStatement("SELECT * FROM CATEGORY");
+		               check5.execute();
+                       resultSet5 = check5.getResultSet(); 
+                       while (resultSet5.next()) {
+                    	   if (resultSet5.getString("nam").equals(resultSet4.getString("nam")))
+                       			out.println ("<option selected=\"selected\" value>" + resultSet5.getString("nam") + "</option>");
+                    	   else
+                    		    out.println ("<option value>" + resultSet5.getString("nam") + "</option>");
+	             } %></th>
 				<td><input value="<%=rs.getInt("price")%>" name="price" size="15" /></td>
 		<%   if (resultSet4.getInt("own") == (Integer) session.getAttribute("userid")) { %>
 				<td><input type="submit" value="Update"></td>
@@ -257,7 +280,7 @@
 			conn.close();
 		} catch (Exception e) {
 			System.out.println (e);
-			System.out.println ("also you suck?!?!?!?!?!?");
+			System.out.println ("also you suck?!?");
 		}
 	%>
 </body>
