@@ -61,9 +61,8 @@
             <ul class="nav">
               <li class="active"><a href="/test/">Home</a></li>
               <li><a href="/test/signup.jsp">Sign Up</a></li>
-              <li><a href="/test/signin.jsp">Log In</a></li>
-              <li><a href="/test/signout.jsp">Log Out</a></li>
               <li><a href="/test/category.jsp">Categories</a></li>
+              <li><a href="/test/products.jsp">Products</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
