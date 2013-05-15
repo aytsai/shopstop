@@ -52,6 +52,46 @@ body {
 
 </head>
 <body>
+   <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/test/">ShopStop</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <% if (session.getAttribute("username") != null) {
+            	  out.print("Logged in as " + session.getAttribute("username") + " ");
+    		      out.print("<a href='/test/signout.jsp'>Log out?</a>");
+                }else
+                  out.print("<a href='/test/signin.jsp'>Log in</a>");
+    		%>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="/test/">Home</a></li>
+              <li><a href="/test/signup.jsp">Sign Up</a></li>
+              <% if (session.getAttribute("username") != null){ %>
+              <% if (session.getAttribute("role").equals("Owner")){ %>
+              <li><a href="/test/category.jsp">Categories</a></li>
+              <% } %>
+              <li><a href="/test/products.jsp">Products</a></li>
+              <% if (session.getAttribute("role").equals("Customer")){ %>
+              <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
+              <% } %>
+              <% } %>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    
+    <br>
+    <br>
+
+
 	<div class="container">
 		<%-- Import the java.sql package --%>
 		<%@ page import="java.sql.*"%>
@@ -95,81 +135,80 @@ body {
                 }
             }
 		 %>
-			<form class="form-signin" action="signup.jsp" method="POST">
-				
-				<% if (session.getAttribute("username") != null) {
+		<form class="form-signin" action="signup.jsp" method="POST">
+
+			<% if (session.getAttribute("username") != null) {
 			    	out.println ("You're already signed in, " + session.getAttribute("username") + ".");
 			    	out.println ("Are you trying to create another account?");
 			       }
 				   else{
 				    out.println("<h2 class='form-signin-heading'>New Account</h2>");
 				   }%>
-				<input type="hidden" name="action" value="insert" />
-				<input type="text" class="input-block-level" name="nam" placeholder="Name">
-				<select name="role">
-					<option value="Owner">Owner</option>
-					<option value="Customer">Customer</option>
-				</select>
-				<input type="text" class="input-block-level" name="age" placeholder="Age">
-				<select name="sta">
-					<option value="AL">Alabama</option> 
-					<option value="AK">Alaska</option> 
-					<option value="AZ">Arizona</option> 
-					<option value="AR">Arkansas</option> 
-					<option value="CA">California</option> 
-					<option value="CO">Colorado</option> 
-					<option value="CT">Connecticut</option> 
-					<option value="DE">Delaware</option> 
-					<option value="DC">District Of Columbia</option> 
-					<option value="FL">Florida</option> 
-					<option value="GA">Georgia</option> 
-					<option value="HI">Hawaii</option> 
-					<option value="ID">Idaho</option> 
-					<option value="IL">Illinois</option> 
-					<option value="IN">Indiana</option> 
-					<option value="IA">Iowa</option> 
-					<option value="KS">Kansas</option> 
-					<option value="KY">Kentucky</option> 
-					<option value="LA">Louisiana</option> 
-					<option value="ME">Maine</option> 
-					<option value="MD">Maryland</option> 
-					<option value="MA">Massachusetts</option> 
-					<option value="MI">Michigan</option> 
-					<option value="MN">Minnesota</option> 
-					<option value="MS">Mississippi</option> 
-					<option value="MO">Missouri</option> 
-					<option value="MT">Montana</option> 
-					<option value="NE">Nebraska</option> 
-					<option value="NV">Nevada</option> 
-					<option value="NH">New Hampshire</option> 
-					<option value="NJ">New Jersey</option> 
-					<option value="NM">New Mexico</option> 
-					<option value="NY">New York</option> 
-					<option value="NC">North Carolina</option> 
-					<option value="ND">North Dakota</option> 
-					<option value="OH">Ohio</option> 
-					<option value="OK">Oklahoma</option> 
-					<option value="OR">Oregon</option> 
-					<option value="PA">Pennsylvania</option> 
-					<option value="RI">Rhode Island</option> 
-					<option value="SC">South Carolina</option> 
-					<option value="SD">South Dakota</option> 
-					<option value="TN">Tennessee</option> 
-					<option value="TX">Texas</option> 
-					<option value="UT">Utah</option> 
-					<option value="VT">Vermont</option> 
-					<option value="VA">Virginia</option> 
-					<option value="WA">Washington</option> 
-					<option value="WV">West Virginia</option> 
-					<option value="WI">Wisconsin</option> 
-					<option value="WY">Wyoming</option>
-				</select>
-				<button class="btn btn-large btn-primary" type="submit">Sign up</button>
-				Already have an account? <a href="/test/signin.jsp">Sign in
-					here.</a>
-			</form>
-			<%-- -------- Close Connection Code -------- --%>
-			<%
+			<input type="hidden" name="action" value="insert" /> <input
+				type="text" class="input-block-level" name="nam" placeholder="Name">
+			<select name="role">
+				<option value="Owner">Owner</option>
+				<option value="Customer">Customer</option>
+			</select> <input type="text" class="input-block-level" name="age"
+				placeholder="Age"> <select name="sta">
+				<option value="AL">Alabama</option>
+				<option value="AK">Alaska</option>
+				<option value="AZ">Arizona</option>
+				<option value="AR">Arkansas</option>
+				<option value="CA">California</option>
+				<option value="CO">Colorado</option>
+				<option value="CT">Connecticut</option>
+				<option value="DE">Delaware</option>
+				<option value="DC">District Of Columbia</option>
+				<option value="FL">Florida</option>
+				<option value="GA">Georgia</option>
+				<option value="HI">Hawaii</option>
+				<option value="ID">Idaho</option>
+				<option value="IL">Illinois</option>
+				<option value="IN">Indiana</option>
+				<option value="IA">Iowa</option>
+				<option value="KS">Kansas</option>
+				<option value="KY">Kentucky</option>
+				<option value="LA">Louisiana</option>
+				<option value="ME">Maine</option>
+				<option value="MD">Maryland</option>
+				<option value="MA">Massachusetts</option>
+				<option value="MI">Michigan</option>
+				<option value="MN">Minnesota</option>
+				<option value="MS">Mississippi</option>
+				<option value="MO">Missouri</option>
+				<option value="MT">Montana</option>
+				<option value="NE">Nebraska</option>
+				<option value="NV">Nevada</option>
+				<option value="NH">New Hampshire</option>
+				<option value="NJ">New Jersey</option>
+				<option value="NM">New Mexico</option>
+				<option value="NY">New York</option>
+				<option value="NC">North Carolina</option>
+				<option value="ND">North Dakota</option>
+				<option value="OH">Ohio</option>
+				<option value="OK">Oklahoma</option>
+				<option value="OR">Oregon</option>
+				<option value="PA">Pennsylvania</option>
+				<option value="RI">Rhode Island</option>
+				<option value="SC">South Carolina</option>
+				<option value="SD">South Dakota</option>
+				<option value="TN">Tennessee</option>
+				<option value="TX">Texas</option>
+				<option value="UT">Utah</option>
+				<option value="VT">Vermont</option>
+				<option value="VA">Virginia</option>
+				<option value="WA">Washington</option>
+				<option value="WV">West Virginia</option>
+				<option value="WI">Wisconsin</option>
+				<option value="WY">Wyoming</option>
+			</select>
+			<button class="btn btn-large btn-primary" type="submit">Sign
+				up</button>
+			Already have an account? <a href="/test/signin.jsp">Sign in here.</a>
+		</form>
+		<%-- -------- Close Connection Code -------- --%>
+		<%
 				rs.close();
 				statement.close();
 				conn.close();
@@ -200,7 +239,7 @@ body {
 			}
 		}
 	%>
-		
+
 	</div>
 	<!-- /container -->
 

@@ -54,6 +54,44 @@ body {
 
 <body>
 
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/test/">ShopStop</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <% if (session.getAttribute("username") != null) {
+            	  out.print("Logged in as " + session.getAttribute("username") + " ");
+    		      out.print("<a href='/test/signout.jsp'>Log out?</a>");
+                }else
+                  out.print("<a href='/test/signin.jsp'>Log in</a>");
+    		%>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="/test/">Home</a></li>
+              <li><a href="/test/signup.jsp">Sign Up</a></li>
+              <% if (session.getAttribute("username") != null){ %>
+              <% if (session.getAttribute("role").equals("Owner")){ %>
+              <li><a href="/test/category.jsp">Categories</a></li>
+              <% } %>
+              <li><a href="/test/products.jsp">Products</a></li>
+              <% if (session.getAttribute("role").equals("Customer")){ %>
+              <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
+              <% } %>
+              <% } %>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+<br>
+<br>
+
 	<div class="container">
 
 		<form class="form-signin">
