@@ -156,7 +156,6 @@
 			<form action="category.jsp" method="POST">
 				<input type="hidden" name="action" value="delete" /> <input
 					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
-				<%-- Button --%>
 		<%   if (rs.getInt("own") == (Integer) session.getAttribute("userid")) { %>
 				<td><input type="submit" value="Delete" /></td>
 		<%   } %>

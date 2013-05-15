@@ -177,14 +177,16 @@
 				%>
 				<td><input value="<%=resultSet4.getString("nam")%>" name="category" size="15" /></td>
 				<td><input value="<%=rs.getInt("price")%>" name="price" size="15" /></td>
-				<%-- Button --%>
+		<%   if (resultSet4.getInt("own") == (Integer) session.getAttribute("userid")) { %>
 				<td><input type="submit" value="Update"></td>
+		<%   } %>
 			</form>
 			<form action="products.jsp" method="POST">
 				<input type="hidden" name="action" value="delete" /> <input
 					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
-				<%-- Button --%>
+		<%   if (resultSet4.getInt("own") == (Integer) session.getAttribute("userid")) { %>
 				<td><input type="submit" value="Delete" /></td>
+		<%   } %>
 			</form>
 		</tr>
 		<%
