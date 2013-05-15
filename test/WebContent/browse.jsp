@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Bad URL</title>
+<title>You shouldn't be here!</title>
 
     <!-- Le styles -->
     <link href="./css/bootstrap.css" rel="stylesheet">
@@ -36,7 +36,6 @@
 <!-- Let's get some JQuery here -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-</head>
 </head>
 <body>
   <div class="navbar navbar-inverse navbar-fixed-top">
