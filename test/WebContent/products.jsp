@@ -29,7 +29,7 @@
 	            ResultSet resultSet = check.getResultSet(); //result set for records
 				resultSet.next();
 				if ((resultSet.getString("role")).equals("Owner")) {*/
-				if (session.getAttribute("role").equals("Owner"))
+				if (session.getAttribute("role").equals("Owner")) {
 			%>
 				<table border="1">
 	            <tr>
