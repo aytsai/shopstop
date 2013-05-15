@@ -156,7 +156,16 @@
 			<form action="category.jsp" method="POST">
 				<input type="hidden" name="action" value="delete" /> <input
 					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
-		<%   if (rs.getInt("own") == (Integer) session.getAttribute("userid")) { %>
+		<%   PreparedStatement check4 = conn.prepareStatement(
+        		"SELECT * FROM PRODUCTS WHERE cat='" +
+        		rs.getInt("id") + "'");
+			 check4.execute();
+			 ResultSet resultSet4 = check4.getResultSet(); //result set for records
+			 
+		
+			 // checks to see if you have permissions to delete this item
+			 if ((rs.getInt("own") == (Integer) session.getAttribute("userid")) &&
+					 (resultSet4.next() == false)) { %>
 				<td><input type="submit" value="Delete" /></td>
 		<%   } %>
 			</form>
