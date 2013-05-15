@@ -88,6 +88,7 @@ body {
 	                int rowCount = pstmt.executeUpdate();
 	                conn.commit();
 	                conn.setAutoCommit(true);
+	                response.sendRedirect("/test/signin.jsp");
                 }
                 else {
                 	// report error
