@@ -75,8 +75,10 @@
 	<%
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
 		Statement statement = null;
 		ResultSet rs = null;
+		ResultSet productName = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
@@ -86,6 +88,7 @@
 		    String action = request.getParameter("action");
 		
 		   	if (session.getAttribute("username") != null) {
+		   		pstmt2 = conn.prepareStatement("SELECT * FROM cse135.PRODUCTS WHERE id = ?");
 		   		out.println ("Hello " + session.getAttribute("username"));
 				if (session.getAttribute("role").equals("Customer")) {
 		            if (action != null && action.equals("delete")) {
@@ -107,6 +110,10 @@
 			      <%
 			// Iterate over the ResultSet
 				while (rs.next()) {
+					pstmt2.setInt(1, Integer.parseInt(rs.getString("product")));
+					pstmt2.execute();
+					productName = pstmt2.getResultSet();
+					
 		%>
 
 		<tr>
@@ -114,7 +121,7 @@
 				<input type="hidden" name="action" value="delete" />
 				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 				<td><%=rs.getInt("id")%></td>
-				<td><input value="<%=rs.getString("product")%>" name="nam" size="15" /></td>
+				<td><input value="<%=productName.getString("name")%>" name="nam" size="15" /></td>
 				<%-- Button --%>
 				<td><input type="submit" value="delete"></td>
 			</form>

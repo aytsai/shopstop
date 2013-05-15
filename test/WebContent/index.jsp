@@ -63,6 +63,7 @@
               <li><a href="/test/signup.jsp">Sign Up</a></li>
               <li><a href="/test/category.jsp">Categories</a></li>
               <li><a href="/test/products.jsp">Products</a></li>
+              <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
