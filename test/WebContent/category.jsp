@@ -29,7 +29,7 @@
 						"INSERT INTO CATEGORY (nam, description, own) VALUES (?, ?, ?)");
 						pstmt.setString(1, request.getParameter("nam"));
 						pstmt.setString(2, request.getParameter("description"));
-						pstmt.setInt(3, (Integer) session.getAttribute("userid")));
+						pstmt.setInt(3, (Integer) session.getAttribute("userid"));
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
@@ -37,9 +37,9 @@
 					if (action != null && action.equals("update")) {
 						conn.setAutoCommit(false);
 						pstmt = conn.prepareStatement(
-								"UPDATE CATEGORY SET nam = ?, desc = ? WHERE id = ?");
+								"UPDATE CATEGORY SET nam = ?, description = ? WHERE id = ?");
 						pstmt.setString(1, request.getParameter("nam"));
-						pstmt.setString(2, request.getParameter("desc"));
+						pstmt.setString(2, request.getParameter("description"));
 						pstmt.setInt(3, Integer.parseInt(request.getParameter("id")));
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
