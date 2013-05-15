@@ -31,7 +31,7 @@
 				if ((resultSet.getString("role")).equals("Customer")) {*/
 				if (session.getAttribute("role").equals("Customer")) {
 			%>
-				you've lost the game
+				you've lost the game! D:  
 			<%
 				}
 				else {
