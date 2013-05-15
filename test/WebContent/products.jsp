@@ -136,6 +136,14 @@
 						conn.commit();
 						conn.setAutoCommit(true);
 					}
+		            PreparedStatement check5 = conn.prepareStatement(
+	                		"SELECT * FROM CATEGORY");
+		            check5.execute();
+		            ResultSet resultset5 = check5.getResultSet();
+		            while (resultSet5.next()) {
+		            	out.println ("<a href=/"products.jsp/"> </a>")
+		            }
+		            
 			%>
 				<table border="1">
 	            <tr>

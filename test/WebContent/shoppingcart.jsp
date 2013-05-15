@@ -89,11 +89,8 @@
 		
 		   	if (session.getAttribute("username") != null) {
 		   		pstmt2 = conn.prepareStatement("SELECT * FROM cse135.PRODUCTS WHERE id = ?");
-		   		out.println ("Hello " + session.getAttribute("username"));
 				if (session.getAttribute("role").equals("Customer")) {
 		            if (action != null && action.equals("delete")) {
-		            	// does NOT have the product check yet
-		            	// if there's a product referring to this category, there is no delete button
 						conn.setAutoCommit(false);
 						pstmt = conn.prepareStatement("DELETE FROM SHOPPINGCART WHERE id = ?");
 						pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
@@ -110,9 +107,12 @@
 			      <%
 			// Iterate over the ResultSet
 				while (rs.next()) {
+					//pstmt2 = conn.prepareStatement("SELECT * FROM cse135.PRODUCTS WHERE id = " +
+					//	rs.getString("product"));
 					pstmt2.setInt(1, Integer.parseInt(rs.getString("product")));
 					pstmt2.execute();
 					productName = pstmt2.getResultSet();
+					productName.next();
 					
 		%>
 
