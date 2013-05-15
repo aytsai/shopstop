@@ -130,8 +130,61 @@
 		
 		   	if (session.getAttribute("username") != null) {
 				if (session.getAttribute("role").equals("Customer")) {
+			PreparedStatement check5 = conn.prepareStatement(
+	                		"SELECT * FROM CATEGORY");
+		            check5.execute();
+		            ResultSet resultSet5 = check5.getResultSet();
+		    %>
+		            <a href="browse.jsp?category=all">All Products</a><br>
+		    <%
+		            while (resultSet5.next()) {
+		            	String link = "browse.jsp?category=" + resultSet5.getString("nam");
+		            	out.println ("<a href=" + link + ">" + resultSet5.getString("nam") + "</a><br>");
+		            }
+		            
 			%>
-				you've lost the game! D:  
+				<form action="browse.jsp" method="POST">
+					<input type="hidden" name="action" value="search" />
+					<input value="" name="nam" size="10"/>
+					<td><input type="submit" value="Search" /></td>
+				</form>
+			
+				<table border="1">
+	            <tr>
+	                <th>ID</th>
+	                <th>Name</th>
+	                <th>SKU</th>
+	                <th>Category</th>
+	                <th>Price</th>
+	            </tr>
+			 <%
+			// Iterate over the ResultSet
+				while (rs.next()) {
+		%>
+
+		<tr>
+				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
+				<td><%=rs.getInt("id")%></td>
+				<td>
+					<%  String link2 = "order.jsp?product=" + rs.getString("name");
+			        	out.println ("<a href=" + link2 + ">" + rs.getString("name") + "</a><br>");
+					%>
+				</td>
+				<td><%=rs.getString("sku")%></td>
+				<%	PreparedStatement check4 = conn.prepareStatement(
+		        		"SELECT * FROM CATEGORY WHERE id='" +
+		        		rs.getInt("cat") + "'");
+					check4.execute();
+					ResultSet resultSet4 = check4.getResultSet(); //result set for records
+					resultSet4.next();
+				%>
+				<th><%=resultSet4.getString("nam")%></th>
+				<td><%=rs.getInt("price")%></td>
+		</tr>
+		<%
+			}
+		%>
+		</table>
 			<%
 				}
 				else {
