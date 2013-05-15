@@ -82,8 +82,7 @@
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
-		    rs = statement.executeQuery("select * from cse135.CATEGORY WHERE own = " +
-												session.getAttribute("userid").toString());
+		    rs = statement.executeQuery("select * from cse135.CATEGORY");
 		    String action = request.getParameter("action");
 		
 		   	if (session.getAttribute("username") != null) {
@@ -151,13 +150,25 @@
 				<td><input value="<%=rs.getString("nam")%>" name="nam" size="15" /></td>
 				<td><input value="<%=rs.getString("description")%>" name="description" size="15" /></td>
 				<%-- Button --%>
+		<%   if (rs.getInt("own") == (Integer) session.getAttribute("userid")) { %>
 				<td><input type="submit" value="Update"></td>
+		<%   } %>
 			</form>
 			<form action="category.jsp" method="POST">
 				<input type="hidden" name="action" value="delete" /> <input
 					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
-				<%-- Button --%>
+		<%   PreparedStatement check4 = conn.prepareStatement(
+        		"SELECT * FROM PRODUCTS WHERE cat='" +
+        		rs.getInt("id") + "'");
+			 check4.execute();
+			 ResultSet resultSet4 = check4.getResultSet(); //result set for records
+			 
+		
+			 // checks to see if you have permissions to delete this item
+			 if ((rs.getInt("own") == (Integer) session.getAttribute("userid")) &&
+					 (resultSet4.next() == false)) { %>
 				<td><input type="submit" value="Delete" /></td>
+		<%   } %>
 			</form>
 		</tr>
 		<%
