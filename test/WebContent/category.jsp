@@ -37,14 +37,8 @@
 		                pstmt.setString(1, request.getParameter("nam"));
 		                pstmt.setString(2, request.getParameter("description"));
 		                
-		                // get the owner id
-		                PreparedStatement check = conn.prepareStatement(
-		                		"SELECT * FROM cse135.USERS WHERE nam='" +
-	            				session.getAttribute("username") + "'");
-	            		check.execute();
-	            		ResultSet resultSet = check.getResultSet(); //result set for records
-						resultSet.next();
-		                pstmt.setInt(3, resultSet.getInt("id"));
+		               
+		                pstmt.setInt(3, );
 		                int rowCount = pstmt.executeUpdate();
 		                conn.commit();
 		                conn.setAutoCommit(true);
@@ -52,7 +46,7 @@
 		            if (action != null && action.equals("delete")) {
 		            	// does NOT have the product check yet
 						conn.setAutoCommit(false);
-						pstmt = conn.prepareStatement("DELETE FROM USERS WHERE id = ?");
+						pstmt = conn.prepareStatement("DELETE FROM CATEGORY WHERE id = ?");
 						pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();

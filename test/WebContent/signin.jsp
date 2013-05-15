@@ -94,6 +94,14 @@ body {
 	                else {
 	                	session.setAttribute("username", request.getParameter("nam"));
 	                	session.setAttribute("role", resultSet.getString("role"));
+	                	 // get the owner id and store in session
+		                PreparedStatement check2 = conn.prepareStatement(
+		                		"SELECT * FROM cse135.USERS WHERE nam='" +
+	            				session.getAttribute("username") + "'");
+	            		check2.execute();
+	            		ResultSet resultSet2 = check2.getResultSet(); //result set for records
+						resultSet2.next();
+	            		session.setAttribute("userid", resultSet2.getInt("id"));
 	                	response.sendRedirect("/test/");
 	                }
 			    }
