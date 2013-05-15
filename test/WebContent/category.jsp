@@ -39,7 +39,7 @@
 		                
 		                // get the owner id
 		                PreparedStatement check = conn.prepareStatement(
-		                		"SELECT * FROM cse135.CATEGORY WHERE nam='" +
+		                		"SELECT * FROM cse135.USERS WHERE nam='" +
 	            				session.getAttribute("username") + "'");
 	            		check.execute();
 	            		ResultSet resultSet = check.getResultSet(); //result set for records
@@ -70,7 +70,7 @@
 			                <form action="category.jsp" method="POST">
 			                    <input type="hidden" name="action" value="insert"/>
 			                    <th>&nbsp;</th>
-			                    <th><input value="" name="Name" size="15"/></th>
+			                    <th><input value="" name="nam" size="15"/></th>
 			                    <th><input value="" name="description" size="15"/></th>
 			                    <th><input type="submit" value="Insert"/></th>
 			                </form>
