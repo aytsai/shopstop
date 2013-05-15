@@ -81,7 +81,8 @@
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
-		    rs = statement.executeQuery("select * from cse135.CATEGORY");
+		    rs = statement.executeQuery("select * from cse135.CATEGORY WHERE own = " +
+												session.getAttribute("userid").toString());
 		    String action = request.getParameter("action");
 		
 		   	if (session.getAttribute("username") != null) {
