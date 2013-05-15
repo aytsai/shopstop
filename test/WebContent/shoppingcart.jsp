@@ -80,6 +80,7 @@
 		PreparedStatement pstmt2 = null;
 		Statement statement = null;
 		ResultSet rs = null;
+		ResultSet rs2 = null;
 		ResultSet productName = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -100,6 +101,23 @@
 						conn.commit();
 						conn.setAutoCommit(true);
 						response.sendRedirect("/test/shoppingcart.jsp");
+					}
+		            if (action != null && action.equals("purchase")) {
+						conn.setAutoCommit(false);
+						pstmt = conn.prepareStatement("SELECT * FROM cse135.SHOPPINGCART WHERE customer = " + 
+														session.getAttribute("userid").toString());
+						pstmt.execute();
+						rs2 = pstmt.getResultSet();
+						while (rs2.next()){
+							pstmt2 = conn.prepareStatement("INSERT INTO cse135.PURCHASES (customer, product, creditcard) VALUES (?, ?, ?) ");
+							pstmt2.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
+							pstmt2.setInt(2, Integer.parseInt(rs2.getString("product")));
+							pstmt2.setString(3, request.getParameter("creditcard"));
+							pstmt2.executeUpdate();
+						}
+						conn.commit();
+						conn.setAutoCommit(true);
+						response.sendRedirect("/test/purchase.jsp");
 					}
 					%>
 						<table border="1">
@@ -133,6 +151,12 @@
 			}
 		%>
 		</table>
+		
+		<form action="shoppingcart.jsp" method="POST">
+			<input type="hidden" name="action" value="purchase" />
+			<input type="text" value="Enter credit card number here" name ="creditcard" />
+			<input type="submit" value="purchase">
+		</form>
 					<%
 				}
 				else {
