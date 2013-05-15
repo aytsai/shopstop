@@ -64,7 +64,9 @@
               <li><a href="/test/category.jsp">Categories</a></li>
               <% } %>
               <li class="active"><a href="/test/products.jsp">Products</a></li>
+              <% if (session.getAttribute("role").equals("Customer")){ %>
               <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
+              <% } %>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
