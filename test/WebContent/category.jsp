@@ -22,13 +22,14 @@
 		
 		   	if (session.getAttribute("username") != null) {
 		   		// check if the user is an owner
-		   		PreparedStatement check = null;
+		   		/*PreparedStatement check = null;
 	            check = conn.prepareStatement("SELECT * FROM cse135.USERS WHERE nam='" +
 	            		session.getAttribute("username") + "'");
 	            check.execute();
 	            ResultSet resultSet = check.getResultSet(); //result set for records
 				resultSet.next();
-				if ((resultSet.getString("role")).equals("Owner")) {
+				if ((resultSet.getString("role")).equals("Owner")) {*/
+				if (session.getAttribute("role").equals("Owner")) {
 			%>
 				<table border="1">
 	            <tr>

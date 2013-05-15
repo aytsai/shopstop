@@ -93,6 +93,7 @@ body {
 	                }
 	                else {
 	                	session.setAttribute("username", request.getParameter("nam"));
+	                	session.setAttribute("role", resultSet.getString("role"));
 	                	response.sendRedirect("/test/");
 	                }
 			    }
