@@ -21,17 +21,18 @@
 		    String action = request.getParameter("action");
 		
 		   	if (session.getAttribute("username") != null) {
+		   		out.println ("Hello " + session.getAttribute("username"));
 				if (session.getAttribute("role").equals("Owner")) {
 					if (action != null && action.equals("insert")) {
-		                conn.setAutoCommit(false);
-		                pstmt = conn.prepareStatement(
-		                		"INSERT INTO CATEGORY (nam, description, own) VALUES (?, ?, ?)");
-		                pstmt.setString(1, request.getParameter("nam"));
-		                pstmt.setString(2, request.getParameter("description"));
-		                pstmt.setInt(3, Integer.parseInt(request.getParameter("id"));
-		                int rowCount = pstmt.executeUpdate();
-		                conn.commit();
-		                conn.setAutoCommit(true);
+						conn.setAutoCommit(false);
+						pstmt = conn.prepareStatement(
+						"INSERT INTO CATEGORY (nam, description, own) VALUES (?, ?, ?)");
+						pstmt.setString(1, request.getParameter("nam"));
+						pstmt.setString(2, request.getParameter("description"));
+						pstmt.setInt(3, (Integer) session.getAttribute("userid")));
+						int rowCount = pstmt.executeUpdate();
+						conn.commit();
+						conn.setAutoCommit(true);
 		            }
 					if (action != null && action.equals("update")) {
 						conn.setAutoCommit(false);
@@ -63,13 +64,13 @@
 			            </tr>
 		
 			            <tr>
-			                <form action="category.jsp" method="POST">
-			                    <input type="hidden" name="action" value="insert"/>
-			                    <th>&nbsp;</th>
-			                    <th><input value="" name="nam" size="15"/></th>
-			                    <th><input value="" name="description" size="15"/></th>
-			                    <th><input type="submit" value="Insert"/></th>
-			                </form>
+			                	<form action="category.jsp" method="POST">
+									<input type="hidden" name="action" value="insert"/>
+									<th>&nbsp;</th>
+									<th><input value="" name="nam" size="15"/></th>
+									<th><input value="" name="description" size="15"/></th>
+									<th><input type="submit" value="Insert"/></th>
+								</form>
 			            </tr>
 			      <%
 			// Iterate over the ResultSet
@@ -77,18 +78,16 @@
 		%>
 
 		<tr>
-			<form action="products.jsp" method="POST">
-				<input type="hidden" name="action" value="update" /> <input
-					type="hidden" name="id" value="<%=rs.getInt("id")%>" />
+			<form action="category.jsp" method="POST">
+				<input type="hidden" name="action" value="update" />
+				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 				<td><%=rs.getInt("id")%></td>
-				<td><input value="<%=rs.getString("nam")%>" name="nam"
-					size="15" /></td>
-				<td><input value="<%=rs.getString("description")%>" name="description"
-					size="15" /></td>
+				<td><input value="<%=rs.getString("nam")%>" name="nam" size="15" /></td>
+				<td><input value="<%=rs.getString("description")%>" name="description" size="15" /></td>
 				<%-- Button --%>
 				<td><input type="submit" value="Update"></td>
 			</form>
-			<form action="products.jsp" method="POST">
+			<form action="category.jsp" method="POST">
 				<input type="hidden" name="action" value="delete" /> <input
 					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
 				<%-- Button --%>
