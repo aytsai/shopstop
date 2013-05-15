@@ -36,6 +36,8 @@
 				}
 				else {
 					out.println ("Sorry, you aren't a customer, so you can't access this page.");
+					String s = "<img src=\"https://dl.dropboxusercontent.com/u/76520097/618px-Trollface_HD.png\" >";
+					out.println(s);
 				}
 		   	}
 		   	else {

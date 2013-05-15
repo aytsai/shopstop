@@ -48,7 +48,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="/index.jsp">ShopStop</a>
+          <a class="brand" href="/test/">ShopStop</a>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
               <% if (session.getAttribute("username") != null) {
