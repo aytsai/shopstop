@@ -81,11 +81,9 @@
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
-		PreparedStatement pstmt3 = null;
 		Statement statement = null;
 		ResultSet rs = null;
 		ResultSet rs2 = null;
-		ResultSet rs3 = null;
 		ResultSet productName = null;
 		int total = 0;
 		boolean buying = false;
@@ -119,16 +117,15 @@
 						int first = 0;
 						while (rs2.next()){
 							pstmt2 = conn.prepareStatement("INSERT INTO cse135.PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?) ");
-							pstmt3 = conn.prepareStatement("DELETE FROM SHOPPINGCART WHERE id = " + rs2.getString("id"));
 							pstmt2.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
 							pstmt2.setInt(2, Integer.parseInt(rs2.getString("product")));
 							pstmt2.setInt(3, Integer.parseInt(rs2.getString("amount")));
 							pstmt2.setString(4, request.getParameter("creditcard"));
 							pstmt2.executeUpdate();
-							pstmt3.executeUpdate();
 						}
 						conn.commit();
 						conn.setAutoCommit(true);
+						out.write("you suck");
 						response.sendRedirect("/test/purchase.jsp");
 					}
 					%>

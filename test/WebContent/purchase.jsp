@@ -82,12 +82,13 @@
 		ResultSet rs = null;
 		ResultSet rs2 = null;
 		ResultSet productName = null;
+		PreparedStatement pstmt3 = null;
 		int total = 0;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
-		    rs = statement.executeQuery("select * from cse135.PURCHASES WHERE customer = " +
+		    rs = statement.executeQuery("select * from cse135.SHOPPINGCART WHERE customer = " +
 												session.getAttribute("userid").toString());
 		    String action = request.getParameter("action");
 		
@@ -110,6 +111,7 @@
 					pstmt2.execute();
 					productName = pstmt2.getResultSet();
 					productName.next();
+					pstmt3 = conn.prepareStatement("DELETE FROM SHOPPINGCART WHERE id = " + rs.getString("id"));
 					
 		%>
 
@@ -122,6 +124,7 @@
 				<td><%=temp%></td>
 		</tr>
 		<%
+				pstmt3.executeUpdate();
 			}
 			out.println ("Total: " + total);
 		%>
@@ -140,7 +143,7 @@
 			conn.close();
 		} catch (Exception e) {
 			System.out.println (e);
-			System.out.println ("also you suck?!!?!?!?!??!");
+			System.out.println ("also you suck?!?!??!?!??!!??!");
 		}
 	%>
 
