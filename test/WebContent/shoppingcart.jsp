@@ -115,6 +115,8 @@
 														session.getAttribute("userid").toString());
 						pstmt.execute();
 						rs2 = pstmt.getResultSet();
+						int i = 0;
+						int first = 0;
 						while (rs2.next()){
 							pstmt2 = conn.prepareStatement("INSERT INTO cse135.PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?) ");
 							pstmt3 = conn.prepareStatement("DELETE FROM SHOPPINGCART WHERE id = " + rs2.getString("id"));

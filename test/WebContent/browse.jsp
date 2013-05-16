@@ -92,7 +92,6 @@
 		    rs = statement.executeQuery("select * from cse135.PRODUCTS");
 		    String action = request.getParameter("action");
 		    
-		    
 		    session.setAttribute("category", "all");
 			session.setAttribute("search", null);
 			if (request.getParameter("category") != null) session.setAttribute("category", request.getParameter("category"));
@@ -101,6 +100,9 @@
 			if (action != null && action.equals("search")) {
 				session.setAttribute("search", request.getParameter("nam"));
 			}
+			
+			out.println (request.getParameter("nam"));
+			out.println (session.getAttribute("category"));
 			
 			if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
 					&& session.getAttribute("search") != null) {
@@ -147,7 +149,8 @@
 		            
 			%>
 				<form action="browse.jsp" method="POST">
-					<input type="hidden" name="action" value="search" />
+					
+					<input value="" name="nam" size="10"/>
 					<input value="" name="nam" size="10"/>
 					<td><input type="submit" value="Search" /></td>
 				</form>
