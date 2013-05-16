@@ -113,8 +113,6 @@
 														session.getAttribute("userid").toString());
 						pstmt.execute();
 						rs2 = pstmt.getResultSet();
-						int i = 0;
-						int first = 0;
 						while (rs2.next()){
 							pstmt2 = conn.prepareStatement("INSERT INTO cse135.PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?) ");
 							pstmt2.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
@@ -125,7 +123,6 @@
 						}
 						conn.commit();
 						conn.setAutoCommit(true);
-						out.write("you suck");
 						response.sendRedirect("/test/purchase.jsp");
 					}
 					%>
@@ -144,7 +141,6 @@
 					pstmt2.execute();
 					productName = pstmt2.getResultSet();
 					productName.next();
-					
 		%>
 
 		<tr>
@@ -152,11 +148,16 @@
 				<input type="hidden" name="action" value="delete" />
 				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 				<td><%=rs.getInt("id")%></td>
-				<td><input value="<%=productName.getString("name")%>" name="nam" size="15" /></td>
+				<%
+					out.println("<td><input value='" + productName.getString("name") + "' name='nam' size='15' /></td>");
+				%>
+				
 				<td><input value="<%=rs.getString("amount")%>" name="nam" size="15" /></td>
 				<% int temp = Integer.parseInt(rs.getString("amount")) * Integer.parseInt(productName.getString("price"));
 				   total += temp;%>
-				<td><input value="<%=temp%>" name="nam" size="15" /></td>
+				<%
+					out.println("<td><input value='" + temp + "' name='nam' size='15' /></td>");
+				%>
 				<%-- Button --%>
 				<td><input type="submit" value="delete"></td>
 			</form>
@@ -183,9 +184,10 @@
 		   		out.println ("Please log in.");
 		   	}
 			rs.close();
+			productName.close();
 			statement.close();
 			conn.close();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			System.out.println (e);
 			System.out.println ("also you suck?!!?!?!?!??!");
 		}
