@@ -215,13 +215,13 @@
 	                    <th>&nbsp;</th>
 	                    <th><input value="" name="nam" size="10"/></th>
 	                    <th><input value="" name="sku" size="15"/></th>
-	                    <!-- <th><input value="" name="category" size="15"/></th> -->
+	                    <!--<th><input value="" name="category" size="15"/></th>-->
 	                    <th><select name="category">
 	                    <% check5 = conn.prepareStatement("SELECT * FROM CATEGORY");
 			               check5.execute();
 	                       resultSet5 = check5.getResultSet(); 
 	                       while (resultSet5.next()) {
-	                       		out.println ("<option value>" + resultSet5.getString("nam") + "</option>");
+	                       		out.println ("<option value=\"" + resultSet5.getString("nam") + "\">" + resultSet5.getString("nam") + "</option>");
 	                       } %></th>
 	                    <th><input value="" name="price" size="15"/></th>
 	                    <th><input type="submit" value="Insert"/></th>
