@@ -85,6 +85,8 @@
 		PreparedStatement pstmt = null;
 		Statement statement = null;
 		ResultSet rs = null;
+		session.setAttribute("category", "all");
+		session.setAttribute("search", null);
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
@@ -94,15 +96,13 @@
 		    
 		    session.setAttribute("category", "all");
 			session.setAttribute("search", null);
+			
 			if (request.getParameter("category") != null) session.setAttribute("category", request.getParameter("category"));
 			if (request.getParameter("search") != null) session.setAttribute("search", request.getParameter("search"));
 			
 			if (action != null && action.equals("search")) {
 				session.setAttribute("search", request.getParameter("nam"));
 			}
-			
-			out.println (request.getParameter("nam"));
-			out.println (session.getAttribute("category"));
 			
 			if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
 					&& session.getAttribute("search") != null) {
@@ -150,7 +150,6 @@
 			%>
 				<form action="browse.jsp" method="POST">
 					
-					<input value="" name="nam" size="10"/>
 					<input value="" name="nam" size="10"/>
 					<td><input type="submit" value="Search" /></td>
 				</form>
