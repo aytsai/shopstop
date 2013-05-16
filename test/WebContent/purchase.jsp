@@ -64,9 +64,6 @@
               <li><a href="/test/category.jsp">Categories</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
-              <% if (session.getAttribute("role").equals("Customer")){ %>
-              <li><a href="/test/browse.jsp">Browse</a></li>
-              <% } %>
               <li class="active"><a href="/test/shoppingcart.jsp">My Cart</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -81,55 +78,24 @@
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
-		PreparedStatement pstmt3 = null;
 		Statement statement = null;
 		ResultSet rs = null;
 		ResultSet rs2 = null;
-		ResultSet rs3 = null;
 		ResultSet productName = null;
 		int total = 0;
-		boolean buying = false;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
-		    rs = statement.executeQuery("select * from cse135.SHOPPINGCART WHERE customer = " +
+		    rs = statement.executeQuery("select * from cse135.PURCHASES WHERE customer = " +
 												session.getAttribute("userid").toString());
 		    String action = request.getParameter("action");
 		
 		   	if (session.getAttribute("username") != null) {
 		   		pstmt2 = conn.prepareStatement("SELECT * FROM cse135.PRODUCTS WHERE id = ?");
 				if (session.getAttribute("role").equals("Customer")) {
-		            if (action != null && action.equals("delete")) {
-						conn.setAutoCommit(false);
-						pstmt = conn.prepareStatement("DELETE FROM SHOPPINGCART WHERE id = ?");
-						pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
-						int rowCount = pstmt.executeUpdate();
-						conn.commit();
-						conn.setAutoCommit(true);
-						response.sendRedirect("/test/shoppingcart.jsp");
-					}
-		            if (action != null && action.equals("purchase")) {
-						conn.setAutoCommit(false);
-						pstmt = conn.prepareStatement("SELECT * FROM cse135.SHOPPINGCART WHERE customer = " + 
-														session.getAttribute("userid").toString());
-						pstmt.execute();
-						rs2 = pstmt.getResultSet();
-						while (rs2.next()){
-							pstmt2 = conn.prepareStatement("INSERT INTO cse135.PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?) ");
-							pstmt3 = conn.prepareStatement("DELETE FROM SHOPPINGCART WHERE id = " + rs2.getString("id"));
-							pstmt2.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
-							pstmt2.setInt(2, Integer.parseInt(rs2.getString("product")));
-							pstmt2.setInt(3, Integer.parseInt(rs2.getString("amount")));
-							pstmt2.setString(4, request.getParameter("creditcard"));
-							pstmt2.executeUpdate();
-							pstmt3.executeUpdate();
-						}
-						conn.commit();
-						conn.setAutoCommit(true);
-						response.sendRedirect("/test/purchase.jsp");
-					}
 					%>
+					    <p>Thanks for shopping. Here's your receipt.</p>
 						<table border="1">
 			            <tr>
 			                <th>ID</th>
@@ -140,7 +106,6 @@
 			      <%
 			// Iterate over the ResultSet
 				while (rs.next()) {
-					buying = true;
 					pstmt2.setInt(1, Integer.parseInt(rs.getString("product")));
 					pstmt2.execute();
 					productName = pstmt2.getResultSet();
@@ -149,32 +114,19 @@
 		%>
 
 		<tr>
-			<form action="shoppingcart.jsp" method="POST">
-				<input type="hidden" name="action" value="delete" />
-				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 				<td><%=rs.getInt("id")%></td>
-				<td><input value="<%=productName.getString("name")%>" name="nam" size="15" /></td>
-				<td><input value="<%=rs.getString("amount")%>" name="nam" size="15" /></td>
+				<td><%=productName.getString("name")%></td>
+				<td><%=rs.getString("amount")%></td>
 				<% int temp = Integer.parseInt(rs.getString("amount")) * Integer.parseInt(productName.getString("price"));
 				   total += temp;%>
-				<td><input value="<%=temp%>" name="nam" size="15" /></td>
-				<%-- Button --%>
-				<td><input type="submit" value="delete"></td>
-			</form>
+				<td><%=temp%></td>
 		</tr>
 		<%
 			}
-			out.println ("Here is your total: " + total);
+			out.println ("Total: " + total);
 		%>
 		</table>
-		<%if (buying == true) { %>
-		<form action="shoppingcart.jsp" method="POST">
-			<input type="hidden" name="action" value="purchase" />
-			<input type="text" value="Enter credit card number here" name ="creditcard" />
-			<input type="submit" value="purchase">
-		</form>
 					<%
-					}
 				}
 				else {
 					out.println ("Sorry, you aren't an customer, so you can't access this page.");

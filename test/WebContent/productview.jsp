@@ -65,6 +65,9 @@
               <% } %>
               <li class="active"><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
+              <li><a href="/test/browse.jsp">Browse</a></li>
+              <% } %>
+              <% if (session.getAttribute("role").equals("Customer")){ %>
               <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
               <% } %>
             </ul>
@@ -94,9 +97,10 @@
 			if (session.getAttribute("role").equals("Customer")) {
 				if (action != null && action.equals("add")) {
 					conn.setAutoCommit(false);
-					pstmt = conn.prepareStatement("INSERT INTO cse135.SHOPPINGCART (customer, product) VALUES (?, ?)");
+					pstmt = conn.prepareStatement("INSERT INTO cse135.SHOPPINGCART (customer, product, amount) VALUES (?, ?, ?)");
 					pstmt.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
 					pstmt.setInt(2, Integer.parseInt(request.getParameter("id")));
+					pstmt.setInt(3, Integer.parseInt(request.getParameter("amount")));
 					pstmt.executeUpdate();
 					conn.commit();
 					conn.setAutoCommit(true);
@@ -109,10 +113,12 @@
 	          	<h1><%=rs2.getString("name") %></h1>
 	          	<p>Product costs: $<%=Integer.toString(rs2.getInt("price")) %></p>
 	          	<p>SKU: <%=rs2.getString("sku") %></p>
+	          	<p>
 	          	
 	          	<form action="productview.jsp" method="POST">
 				<input type="hidden" name="action" value="add" />
 				<input type="hidden" name="id" value="<%=Integer.toString(rs2.getInt("id")) %>" />
+				Amount: <input value="" name="amount" size="15"/><P>
 				<input type="submit" name="purchase" value="Add to Shopping Cart">
 				</form>
 	          	<% 

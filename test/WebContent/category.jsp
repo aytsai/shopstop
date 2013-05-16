@@ -118,8 +118,6 @@
 						response.sendRedirect("/test/category.jsp");
 					}
 		            if (action != null && action.equals("delete")) {
-		            	// does NOT have the product check yet
-		            	// if there's a product referring to this category, there is no delete button
 						conn.setAutoCommit(false);
 						pstmt = conn.prepareStatement("DELETE FROM CATEGORY WHERE id = ?");
 						pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
