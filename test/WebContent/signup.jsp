@@ -110,6 +110,7 @@ body {
 			statement = conn.createStatement();
 		    rs = statement.executeQuery("select * from cse135.USERS");
 		    String action = request.getParameter("action");
+		    boolean recordFound = false;
 		    
 		    // insertion
 		    if (action != null && action.equals("insert")) {
@@ -121,7 +122,7 @@ body {
                 		request.getParameter("nam") + "'");
                 check.execute();
                 ResultSet resultSet = check.getResultSet(); //result set for records
-				boolean recordFound = resultSet.next();
+				recordFound = resultSet.next();
                 if (recordFound == false) {
 	                pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
 	                pstmt.setString(1, request.getParameter("nam"));
@@ -133,14 +134,12 @@ body {
 	                conn.setAutoCommit(true);
 	                response.sendRedirect("/test/signin.jsp");
                 }
-                else {
-                	// report error
-                }
             }
 		 %>
 		<form class="form-signin" action="signup.jsp" method="POST">
 
-			<% if (session.getAttribute("username") != null) {
+			<%     if (recordFound == true) out.println ("This username is already taken!");
+			       if (session.getAttribute("username") != null) {
 			    	out.println ("You're already signed in, " + session.getAttribute("username") + ".");
 			    	out.println ("Are you trying to create another account?");
 			       }
