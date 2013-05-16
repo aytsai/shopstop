@@ -169,7 +169,7 @@
 				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 				<td><%=rs.getInt("id")%></td>
 				<td>
-					<%  String link2 = "order.jsp?product=" + rs.getString("name");
+					<%  String link2 = "productview.jsp?id=" + rs.getString("id");
 			        	out.println ("<a href=" + link2 + ">" + rs.getString("name") + "</a><br>");
 					%>
 				</td>
