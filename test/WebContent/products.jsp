@@ -276,7 +276,7 @@
 					rs = statement.executeQuery("SELECT * FROM cse135.PRODUCTS");
 					while (rs.next()){
 					%>
-						<a href="/test/productview.jsp?<%=Integer.toString(rs.getInt("id"))%>"><%=rs.getString("name") %></a>
+						<a href="/test/productview.jsp?id=<%=Integer.toString(rs.getInt("id"))%>"><%=rs.getString("name") %></a>
 						<br>
 					<% 
 					}
