@@ -79,6 +79,9 @@ body {
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
+              <li><a href="/test/browse.jsp">Browse</a></li>
+              <% } %>
+              <% if (session.getAttribute("role").equals("Customer")){ %>
               <li><a href="/test/shoppingcart.jsp">My Cart</a></li>
               <% } %>
               <% } %>
