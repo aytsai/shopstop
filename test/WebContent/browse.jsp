@@ -102,8 +102,6 @@
 				session.setAttribute("search", request.getParameter("nam"));
 			}
 			
-			out.println (session.getAttribute("category") + " " + session.getAttribute("search"));
-			
 			if ((session.getAttribute("category") != null && !session.getAttribute("category").equals("all"))
 					&& session.getAttribute("search") != null) {
 				PreparedStatement check7 = conn.prepareStatement(

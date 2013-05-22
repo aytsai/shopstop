@@ -187,7 +187,7 @@
 			productName.close();
 			statement.close();
 			conn.close();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println (e);
 			System.out.println ("also you suck?!!?!?!?!??!");
 		}

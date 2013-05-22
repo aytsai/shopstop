@@ -89,10 +89,11 @@
 			rs = statement.executeQuery("select * from cse135.PRODUCTS");
 			String action = request.getParameter("action");
 			
+			
 			session.setAttribute("category", "all");
 			session.setAttribute("search", null);
 			if (request.getParameter("category") != null) session.setAttribute("category", request.getParameter("category"));
-			if (request.getParameter("search") != null) session.setAttribute("search", request.getParameter("search"));
+			if (request.getParameter("nam") != null) session.setAttribute("search", request.getParameter("nam"));
 			
 			if (action != null && action.equals("search")) {
 				session.setAttribute("search", request.getParameter("nam"));
@@ -125,7 +126,8 @@
 			else {
 				rs = statement.executeQuery("select * from cse135.PRODUCTS");
 			}
-				
+			
+			
 		   	if (session.getAttribute("username") != null) {
 				if (session.getAttribute("role").equals("Owner")) {
 					if (action != null && action.equals("insert")) {
@@ -190,12 +192,14 @@
 		    <%
 		            while (resultSet5.next()) {
 		            	String link = "products.jsp?category=" + resultSet5.getString("nam");
+		            	if (session.getAttribute("search") != null) link += "&nam=" + session.getAttribute("search");
 		            	out.println ("<a href=" + link + ">" + resultSet5.getString("nam") + "</a><br>");
 		            }
 		            
 			%>
 				<form action="products.jsp" method="POST">
 					<input type="hidden" name="action" value="search" />
+					<input type="hidden" name="category" value="<%=session.getAttribute("category")%>" />
 					<input value="" name="nam" size="10"/>
 					<td><input type="submit" value="Search" /></td>
 				</form>
