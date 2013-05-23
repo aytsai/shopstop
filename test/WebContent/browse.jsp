@@ -57,15 +57,16 @@
     		%>
             </p>
             <ul class="nav">
-              <li class="active"><a href="/test/">Home</a></li>
+              <li><a href="/test/">Home</a></li>
               <li><a href="/test/signup.jsp">Sign Up</a></li>
               <% if (session.getAttribute("username") != null){ %>
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
+              <li><a href="/test/analytics.jsp">Analytics</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
-              <li><a href="/test/browse.jsp">Browse</a></li>
+              <li class="active"><a href="/test/browse.jsp">Browse</a></li>
               <% } %>
               <% if (session.getAttribute("role").equals("Customer")){ %>
               <li><a href="/test/shoppingcart.jsp">My Cart</a></li>

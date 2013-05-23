@@ -59,12 +59,12 @@
     		%>
             </p>
             <ul class="nav">
-              <li class="active"><a href="/test/">Home</a></li>
+              <li><a href="/test/">Home</a></li>
               <li><a href="/test/signup.jsp">Sign Up</a></li>
               <% if (session.getAttribute("username") != null){ %>
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
-              <li><a href="/test/analytics.jsp">Analytics</a></li>
+              <li class="active"><a href="/test/analytics.jsp">Analytics</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
@@ -81,10 +81,102 @@
     </div>
 
     <div class="container">
-          <div class="hero-unit">
-            <h1>Welcome to ShopStop!</h1>
-            <p>This is a shopping application for CSE 135 at UCSD.</p>
-          </div>
+    	  <div class="row">
+    	  <div class="span10">
+          <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Customer Name</th>
+                  <th>Age</th>
+                  <th>State</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Pencil</td>
+                  <td>Mark</td>
+                  <td>21</td>
+                  <td>CA</td>
+                </tr>
+                <tr>
+                  <td>Car</td>
+                  <td>John</td>
+                  <td>12</td>
+                  <td>AZ</td>
+                </tr>
+                <tr>
+                  <td>Paper</td>
+                  <td>Jerry</td>
+                  <td>87</td>
+                  <td>NY</td>
+                </tr>
+                <tr>
+                  <td>Pencil</td>
+                  <td>Mark</td>
+                  <td>21</td>
+                  <td>CA</td>
+                </tr>
+                <tr>
+                  <td>Car</td>
+                  <td>John</td>
+                  <td>12</td>
+                  <td>AZ</td>
+                </tr>
+                <tr>
+                  <td>Paper</td>
+                  <td>Jerry</td>
+                  <td>87</td>
+                  <td>NY</td>
+                </tr>
+                <tr>
+                  <td>Pencil</td>
+                  <td>Mark</td>
+                  <td>21</td>
+                  <td>CA</td>
+                </tr>
+                <tr>
+                  <td>Car</td>
+                  <td>John</td>
+                  <td>12</td>
+                  <td>AZ</td>
+                </tr>
+                <tr>
+                  <td>Paper</td>
+                  <td>Jerry</td>
+                  <td>87</td>
+                  <td>NY</td>
+                </tr>
+                <tr>
+                  <td>Car</td>
+                  <td>John</td>
+                  <td>12</td>
+                  <td>AZ</td>
+                </tr>
+              </tbody>
+            </table>
+			</div>
+			<div class="span2">
+			<br><br><br><br><br><br><br><br>
+			<a href="/">Prev</a>
+			<br><br>
+			Showing rows 1 - 10
+			<br><br>
+			<a href="/">Next</a>
+			</div>
+			<div class="row">
+			<div class="span1 offset3">
+			<a href="/">Prev</a>
+			</div>
+			<div class="span2">
+			Showing columns 1-10
+			</div>
+			<div class="span1 offset1">
+			<a href="/">Next</a>
+			</div>
+			</div>
+			</div>
+ 
       <hr>
 
       <footer>
