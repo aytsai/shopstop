@@ -89,20 +89,27 @@
 		ResultSet rs = null;
 		ResultSet rs2 = null;
 		ResultSet rs3 = null;
+		String link;
+		Integer c;
+		Integer r;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
 			statement2 = conn.createStatement();
 			statement3 = conn.createStatement();
-			// COUNT(DISTINCT PURCHASES(product, customer)),
-			/*String st = "SELECT PURCHASES.*, PRODUCTS.*, USERS.* " +
-					"FROM PURCHASES, PRODUCTS, USERS " +
-					"WHERE USERS.role = 'customer' AND PRODUCTS.id = PURCHASES.product AND PURCHASES.customer = USERS.id " +
-					"ORDER BY PURCHASES.amount AND PRODUCTS.name";*/
-			rs = statement.executeQuery("SELECT PRODUCTS.name " +
-					                    "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-										"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC");
+			
+			// get the row/col page here
+			session.setAttribute("row", null);
+			session.setAttribute("col", null);
+			if (request.getParameter("row") != null) session.setAttribute("row", request.getParameter("row"));
+			if (request.getParameter("col") != null) session.setAttribute("col", request.getParameter("col"));
+			
+			String st = "SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
+                    "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10";
+					// "OFFSET " + Integer.parseInt(session.getAttribute("col").toString())*10
+			rs = statement.executeQuery(st);
 			if (session.getAttribute("username") != null) {
 			%>
 				<form action="products.jsp" method="POST">
@@ -131,12 +138,11 @@
               	rs2 = statement2.executeQuery("SELECT USERS.*" +
 	                    "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
               			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC");
+						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10");
+              // + "LIMIT 10" OFFSET " + (((Integer) session.getAttribute("row"))*10)
                 while (rs2.next()) {
                 	if ((rs2.getString("role")).equals("Customer")) {
-                	rs = statement.executeQuery("SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
-    	                    "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-    						"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC");
+                	rs = statement.executeQuery(st);
                 %>
                 	<tr><td><b>Name: <%= rs2.getString("nam") %></b><br>
                 	        Age: <%= rs2.getString("age") %><br>
@@ -163,21 +169,41 @@
 			</div>
 			<div class="span2">
 			<br><br><br><br><br><br><br><br>
-			<a href="/">Prev</a>
+			<% if (session.getAttribute("row") == null || session.getAttribute("row").equals("0")) r = 0;
+			   else r = Integer.parseInt(session.getAttribute("row").toString()) - 1;
+			   link = "analytics.jsp?row=" + r;
+		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
+		       out.println ("<a href=" + link + ">Prev</a><br>");
+		    %>
 			<br><br>
 			Showing rows 1 - 10
 			<br><br>
-			<a href="/">Next</a>
+			<% if (session.getAttribute("row") == null) r = 1;
+			   else r = Integer.parseInt(session.getAttribute("row").toString()) + 1;
+			   link = "analytics.jsp?row=" + r;
+		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
+		       out.println ("<a href=" + link + ">Next</a><br>");
+		    %>
 			</div>
 			<div class="row">
 			<div class="span1 offset3">
-			<a href="/">Prev</a>
+			<% if (session.getAttribute("col") == null || session.getAttribute("col").equals("0")) c = 0;
+			   else c = Integer.parseInt(session.getAttribute("col").toString()) - 1;
+			   link = "analytics.jsp?col=" + c;
+		       if (session.getAttribute("row") != null) link += "&row=" + session.getAttribute("row");
+		       out.println ("<a href=" + link + ">Prev</a><br>");
+		    %>
 			</div>
 			<div class="span2">
-			Showing columns 1-10
+			Showing cols 1-10
 			</div>
 			<div class="span1 offset1">
-			<a href="/">Next</a>
+			<% if (session.getAttribute("col") == null) c = 1;
+			   else c = Integer.parseInt(session.getAttribute("col").toString()) + 1;
+			   link = "analytics.jsp?col=" + c;
+		       if (session.getAttribute("row") != null) link += "&row=" + session.getAttribute("row");
+		       out.println ("<a href=" + link + ">Next</a><br>");
+		    %>
 			</div>
 			</div>
 			</div>
