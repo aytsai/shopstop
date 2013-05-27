@@ -83,18 +83,26 @@
     <%@ page import="java.sql.*"%>
 	<%
 		Connection conn = null;
-		PreparedStatement pstmt = null;
 		Statement statement = null;
+		Statement statement2 = null;
+		Statement statement3 = null;
 		ResultSet rs = null;
+		ResultSet rs2 = null;
+		ResultSet rs3 = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
-			String st = "SELECT PURCHASES.*, PRODUCTS.*, USERS.* " +
+			statement2 = conn.createStatement();
+			statement3 = conn.createStatement();
+			// COUNT(DISTINCT PURCHASES(product, customer)),
+			/*String st = "SELECT PURCHASES.*, PRODUCTS.*, USERS.* " +
 					"FROM PURCHASES, PRODUCTS, USERS " +
 					"WHERE USERS.role = 'customer' AND PRODUCTS.id = PURCHASES.product AND PURCHASES.customer = USERS.id " +
-					"ORDER BY PRODUCTS.name";
-			rs = statement.executeQuery(st);
+					"ORDER BY PURCHASES.amount AND PRODUCTS.name";*/
+			rs = statement.executeQuery("SELECT PRODUCTS.name " +
+					                    "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+										"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC");
 			if (session.getAttribute("username") != null) {
 			%>
 				<form action="products.jsp" method="POST">
@@ -109,39 +117,41 @@
           <table class="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <th>Product Name</th>
-	              <th>SKU</th>
-	              <th>Category</th>
-	              <th>Price</th>
-                  <th>Customer Name</th>
-                  <th>Age</th>
-                  <th>State</th>
-                  <th>Amount Purchased</th>
-                  <th>Money Spent</th>
+                    <th></th>
+                  <%
+				while (rs.next()) {
+					%>
+					<th><%= rs.getString("name") %></th>
+	            <%
+            	}%>
                 </tr>
               </thead>
               <tbody>
               <%
-			// Iterate over the ResultSet
-				while (rs.next()) {
-					PreparedStatement check2 = conn.prepareStatement("SELECT * FROM PURCHASES WHERE product='" +
-			        													rs.getInt("id") + "'");
-					check2.execute();
-					ResultSet resultSet2 = check2.getResultSet();
-					%>
-					<tr>
-					<td><%=rs.getString("name")%></td>
-					<td><%=rs.getString("sku")%></td>
-					<td><%=rs.getString("cat")%></td>
-					<td><%=rs.getString("price")%></td>
-					<td><%=rs.getString("nam")%></td>
-					<td><%=rs.getString("age")%></td>
-					<td><%=rs.getString("sta")%></td>
-					<td><%=rs.getString("amount")%></td>
-					<td><%=rs.getInt("price")*rs.getInt("amount")%></td>
-					</tr>
-	            <%
-            	}%>
+              	rs2 = statement2.executeQuery("SELECT USERS.*" +
+	                    "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+              			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC");
+                while (rs2.next()) {
+                	rs = statement.executeQuery("SELECT PRODUCTS.name, PRODUCTS.id " +
+    	                    "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+    						"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC");
+                %>
+                	<tr><td><%= rs2.getString("nam") %></td><%
+                	while (rs.next()) {
+                		rs3 = statement3.executeQuery("SELECT * FROM PURCHASES WHERE PURCHASES.customer = '"
+                				                      + rs2.getString("id") + "' AND PURCHASES.product = '"
+                				                      + rs.getString("id") + "'");
+                		if (rs3.next()) {
+                	%>
+                		<td><%= rs3.getString("amount") %></td>
+                	<%
+                		}
+                		else {%><td>No records found.</td><%}
+                	}
+                	%></tr><%
+                }
+                 	%>
               </tbody>
             </table>
 			</div>
@@ -184,7 +194,7 @@
 			conn.close();
 		} catch (Exception e) {
 			System.out.println (e);
-			System.out.println ("also you suck?!?");
+			System.out.println ("also you suck???!?!??!?!!?");
 		}
 	%>
   </body>
