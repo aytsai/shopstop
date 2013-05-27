@@ -92,6 +92,7 @@
 		String link;
 		Integer c;
 		Integer r;
+		Integer o;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
@@ -105,10 +106,12 @@
 			if (request.getParameter("row") != null) session.setAttribute("row", request.getParameter("row"));
 			if (request.getParameter("col") != null) session.setAttribute("col", request.getParameter("col"));
 			
+			if (request.getParameter("col") == null) o = 0;
+			else o = Integer.parseInt(request.getParameter("col").toString());
 			String st = "SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
                     "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10";
-					// "OFFSET " + Integer.parseInt(session.getAttribute("col").toString())*10
+					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10 " +
+							"OFFSET " + o*10;
 			rs = statement.executeQuery(st);
 			if (session.getAttribute("username") != null) {
 			%>
@@ -135,11 +138,13 @@
               </thead>
               <tbody>
               <%
+              	if (request.getParameter("row") == null) o = 0;
+  				else o = Integer.parseInt(request.getParameter("row").toString());
               	rs2 = statement2.executeQuery("SELECT USERS.*" +
 	                    "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
               			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10");
-              // + "LIMIT 10" OFFSET " + (((Integer) session.getAttribute("row"))*10)
+						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+                        "OFFSET " + o*10);
                 while (rs2.next()) {
                 	if ((rs2.getString("role")).equals("Customer")) {
                 	rs = statement.executeQuery(st);
@@ -184,6 +189,9 @@
 		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
 		       out.println ("<a href=" + link + ">Next</a><br>");
 		    %>
+		    
+		    
+		    
 			</div>
 			<div class="row">
 			<div class="span1 offset3">
@@ -224,7 +232,7 @@
 			rs.close();
 			statement.close();
 			conn.close();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			System.out.println (e);
 			System.out.println ("also you suck???!!?");
 		}
