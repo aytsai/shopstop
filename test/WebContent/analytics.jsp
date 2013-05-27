@@ -133,23 +133,29 @@
               			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC");
                 while (rs2.next()) {
-                	rs = statement.executeQuery("SELECT PRODUCTS.name, PRODUCTS.id " +
+                	if ((rs2.getString("role")).equals("Customer")) {
+                	rs = statement.executeQuery("SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
     	                    "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
     						"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC");
                 %>
-                	<tr><td><%= rs2.getString("nam") %></td><%
+                	<tr><td><b>Name: <%= rs2.getString("nam") %></b><br>
+                	        Age: <%= rs2.getString("age") %><br>
+                	        State: <%= rs2.getString("sta") %><br></td><%
                 	while (rs.next()) {
-                		rs3 = statement3.executeQuery("SELECT * FROM PURCHASES WHERE PURCHASES.customer = '"
+                		rs3 = statement3.executeQuery("SELECT COUNT(PURCHASES.amount), SUM(PURCHASES.amount)" +
+                									  "FROM PURCHASES WHERE PURCHASES.customer = '"
                 				                      + rs2.getString("id") + "' AND PURCHASES.product = '"
-                				                      + rs.getString("id") + "'");
+                				                      + rs.getString("id") + "' GROUP BY PURCHASES.product");
                 		if (rs3.next()) {
                 	%>
-                		<td><%= rs3.getString("amount") %></td>
+                		<td>Orders: <%= rs3.getString(1) %><br>
+                		    Value: $<%= rs3.getInt(2)*rs.getInt("price") %></td>
                 	<%
                 		}
                 		else {%><td>No records found.</td><%}
                 	}
                 	%></tr><%
+                }
                 }
                  	%>
               </tbody>
@@ -194,7 +200,7 @@
 			conn.close();
 		} catch (Exception e) {
 			System.out.println (e);
-			System.out.println ("also you suck???!?!??!?!!?");
+			System.out.println ("also you suck???!!?");
 		}
 	%>
   </body>
