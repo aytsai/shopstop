@@ -79,7 +79,30 @@
         </div>
       </div>
     </div>
-
+    
+    <%@ page import="java.sql.*"%>
+	<%
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
+			statement = conn.createStatement();
+			String st = "SELECT PURCHASES.*, PRODUCTS.*, USERS.* " +
+					"FROM PURCHASES, PRODUCTS, USERS " +
+					"WHERE USERS.role = 'customer' AND PRODUCTS.id = PURCHASES.product AND PURCHASES.customer = USERS.id " +
+					"ORDER BY PRODUCTS.name";
+			rs = statement.executeQuery(st);
+			if (session.getAttribute("username") != null) {
+			%>
+				<form action="products.jsp" method="POST">
+					<input type="hidden" name="action" value="search" />
+					<input type="hidden" name="category" value="<%=session.getAttribute("category")%>" />
+					<input value="" name="nam" size="10"/>
+					<td><input type="submit" value="Search" /></td>
+				</form>
     <div class="container">
     	  <div class="row">
     	  <div class="span10">
@@ -87,72 +110,38 @@
               <thead>
                 <tr>
                   <th>Product Name</th>
+	              <th>SKU</th>
+	              <th>Category</th>
+	              <th>Price</th>
                   <th>Customer Name</th>
                   <th>Age</th>
                   <th>State</th>
+                  <th>Amount Purchased</th>
+                  <th>Money Spent</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Pencil</td>
-                  <td>Mark</td>
-                  <td>21</td>
-                  <td>CA</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
-                <tr>
-                  <td>Paper</td>
-                  <td>Jerry</td>
-                  <td>87</td>
-                  <td>NY</td>
-                </tr>
-                <tr>
-                  <td>Pencil</td>
-                  <td>Mark</td>
-                  <td>21</td>
-                  <td>CA</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
-                <tr>
-                  <td>Paper</td>
-                  <td>Jerry</td>
-                  <td>87</td>
-                  <td>NY</td>
-                </tr>
-                <tr>
-                  <td>Pencil</td>
-                  <td>Mark</td>
-                  <td>21</td>
-                  <td>CA</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
-                <tr>
-                  <td>Paper</td>
-                  <td>Jerry</td>
-                  <td>87</td>
-                  <td>NY</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
+              <%
+			// Iterate over the ResultSet
+				while (rs.next()) {
+					PreparedStatement check2 = conn.prepareStatement("SELECT * FROM PURCHASES WHERE product='" +
+			        													rs.getInt("id") + "'");
+					check2.execute();
+					ResultSet resultSet2 = check2.getResultSet();
+					%>
+					<tr>
+					<td><%=rs.getString("name")%></td>
+					<td><%=rs.getString("sku")%></td>
+					<td><%=rs.getString("cat")%></td>
+					<td><%=rs.getString("price")%></td>
+					<td><%=rs.getString("nam")%></td>
+					<td><%=rs.getString("age")%></td>
+					<td><%=rs.getString("sta")%></td>
+					<td><%=rs.getString("amount")%></td>
+					<td><%=rs.getInt("price")*rs.getInt("amount")%></td>
+					</tr>
+	            <%
+            	}%>
               </tbody>
             </table>
 			</div>
@@ -185,5 +174,18 @@
 
     </div><!--/container-->
 
+<%
+			}
+		   	else {
+		   		out.println ("Please log in.");
+		   	}
+			rs.close();
+			statement.close();
+			conn.close();
+		} catch (Exception e) {
+			System.out.println (e);
+			System.out.println ("also you suck?!?");
+		}
+	%>
   </body>
 </html>
