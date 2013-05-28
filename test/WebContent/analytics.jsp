@@ -79,100 +79,139 @@
         </div>
       </div>
     </div>
-
+    
+    <%@ page import="java.sql.*"%>
+	<%
+		Connection conn = null;
+		Statement statement = null;
+		Statement statement2 = null;
+		Statement statement3 = null;
+		ResultSet rs = null;
+		ResultSet rs2 = null;
+		ResultSet rs3 = null;
+		String link;
+		Integer c;
+		Integer r;
+		Integer o;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
+			statement = conn.createStatement();
+			statement2 = conn.createStatement();
+			statement3 = conn.createStatement();
+			
+			// get the row/col page here
+			session.setAttribute("row", null);
+			session.setAttribute("col", null);
+			if (request.getParameter("row") != null) session.setAttribute("row", request.getParameter("row"));
+			if (request.getParameter("col") != null) session.setAttribute("col", request.getParameter("col"));
+			
+			if (request.getParameter("col") == null) o = 0;
+			else o = Integer.parseInt(request.getParameter("col").toString());
+			String st = "SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
+                    "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10 " +
+							"OFFSET " + o*10;
+			rs = statement.executeQuery(st);
+			if (session.getAttribute("username") != null) {
+			%>
+				<form action="products.jsp" method="POST">
+					<input type="hidden" name="action" value="search" />
+					<input type="hidden" name="category" value="<%=session.getAttribute("category")%>" />
+					<input value="" name="nam" size="10"/>
+					<td><input type="submit" value="Search" /></td>
+				</form>
     <div class="container">
     	  <div class="row">
     	  <div class="span10">
           <table class="table table-bordered table-hover">
               <thead>
                 <tr>
-                  <th>Product Name</th>
-                  <th>Customer Name</th>
-                  <th>Age</th>
-                  <th>State</th>
+                    <th></th>
+                  <%
+				while (rs.next()) {
+					%>
+					<th><%= rs.getString("name") %></th>
+	            <%
+            	}%>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Pencil</td>
-                  <td>Mark</td>
-                  <td>21</td>
-                  <td>CA</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
-                <tr>
-                  <td>Paper</td>
-                  <td>Jerry</td>
-                  <td>87</td>
-                  <td>NY</td>
-                </tr>
-                <tr>
-                  <td>Pencil</td>
-                  <td>Mark</td>
-                  <td>21</td>
-                  <td>CA</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
-                <tr>
-                  <td>Paper</td>
-                  <td>Jerry</td>
-                  <td>87</td>
-                  <td>NY</td>
-                </tr>
-                <tr>
-                  <td>Pencil</td>
-                  <td>Mark</td>
-                  <td>21</td>
-                  <td>CA</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
-                <tr>
-                  <td>Paper</td>
-                  <td>Jerry</td>
-                  <td>87</td>
-                  <td>NY</td>
-                </tr>
-                <tr>
-                  <td>Car</td>
-                  <td>John</td>
-                  <td>12</td>
-                  <td>AZ</td>
-                </tr>
+              <%
+              	if (request.getParameter("row") == null) o = 0;
+  				else o = Integer.parseInt(request.getParameter("row").toString());
+              	rs2 = statement2.executeQuery("SELECT USERS.*" +
+	                    "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+              			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+                        "OFFSET " + o*10);
+                while (rs2.next()) {
+                	if ((rs2.getString("role")).equals("Customer")) {
+                	rs = statement.executeQuery(st);
+                %>
+                	<tr><td><b>Name: <%= rs2.getString("nam") %></b><br>
+                	        Age: <%= rs2.getString("age") %><br>
+                	        State: <%= rs2.getString("sta") %><br></td><%
+                	while (rs.next()) {
+                		rs3 = statement3.executeQuery("SELECT COUNT(PURCHASES.amount), SUM(PURCHASES.amount)" +
+                									  "FROM PURCHASES WHERE PURCHASES.customer = '"
+                				                      + rs2.getString("id") + "' AND PURCHASES.product = '"
+                				                      + rs.getString("id") + "' GROUP BY PURCHASES.product");
+                		if (rs3.next()) {
+                	%>
+                		<td>Orders: <%= rs3.getString(1) %><br>
+                		    Value: $<%= rs3.getInt(2)*rs.getInt("price") %></td>
+                	<%
+                		}
+                		else {%><td>No records found.</td><%}
+                	}
+                	%></tr><%
+                }
+                }
+                 	%>
               </tbody>
             </table>
 			</div>
 			<div class="span2">
 			<br><br><br><br><br><br><br><br>
-			<a href="/">Prev</a>
+			<% if (session.getAttribute("row") == null || session.getAttribute("row").equals("0")) r = 0;
+			   else r = Integer.parseInt(session.getAttribute("row").toString()) - 1;
+			   link = "analytics.jsp?row=" + r;
+		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
+		       out.println ("<a href=" + link + ">Prev</a><br>");
+		    %>
 			<br><br>
 			Showing rows 1 - 10
 			<br><br>
-			<a href="/">Next</a>
+			<% if (session.getAttribute("row") == null) r = 1;
+			   else r = Integer.parseInt(session.getAttribute("row").toString()) + 1;
+			   link = "analytics.jsp?row=" + r;
+		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
+		       out.println ("<a href=" + link + ">Next</a><br>");
+		    %>
+		    
+		    
+		    
 			</div>
 			<div class="row">
 			<div class="span1 offset3">
-			<a href="/">Prev</a>
+			<% if (session.getAttribute("col") == null || session.getAttribute("col").equals("0")) c = 0;
+			   else c = Integer.parseInt(session.getAttribute("col").toString()) - 1;
+			   link = "analytics.jsp?col=" + c;
+		       if (session.getAttribute("row") != null) link += "&row=" + session.getAttribute("row");
+		       out.println ("<a href=" + link + ">Prev</a><br>");
+		    %>
 			</div>
 			<div class="span2">
-			Showing columns 1-10
+			Showing cols 1-10
 			</div>
 			<div class="span1 offset1">
-			<a href="/">Next</a>
+			<% if (session.getAttribute("col") == null) c = 1;
+			   else c = Integer.parseInt(session.getAttribute("col").toString()) + 1;
+			   link = "analytics.jsp?col=" + c;
+		       if (session.getAttribute("row") != null) link += "&row=" + session.getAttribute("row");
+		       out.println ("<a href=" + link + ">Next</a><br>");
+		    %>
 			</div>
 			</div>
 			</div>
@@ -185,5 +224,18 @@
 
     </div><!--/container-->
 
+<%
+			}
+		   	else {
+		   		out.println ("Please log in.");
+		   	}
+			rs.close();
+			statement.close();
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println (e);
+			System.out.println ("also you suck???!!?");
+		}
+	%>
   </body>
 </html>
