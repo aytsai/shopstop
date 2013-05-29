@@ -86,11 +86,13 @@
 		Statement statement = null;
 		Statement statement2 = null;
 		Statement statement3 = null;
+		Statement statement4 = null;
+		Statement statement5 = null;
 		ResultSet rs = null;
 		ResultSet rs2 = null;
 		ResultSet rs3 = null;
 		ResultSet rs4 = null;
-		Statement statement4 = null;
+		ResultSet rs5 = null;
 		String link;
 		Integer c;
 		Integer r;
@@ -105,6 +107,7 @@
 			statement = conn.createStatement();
 			statement2 = conn.createStatement();
 			statement3 = conn.createStatement();
+			statement5 = conn.createStatement();
 			
 			// get the row/col page here
 			session.setAttribute("row", null);
@@ -124,7 +127,90 @@
 							"OFFSET " + o*10;
 			rs = statement.executeQuery(st);
 			if (session.getAttribute("username") != null) {
-			%><p> This table only shows the items that have been purchased before. </p>
+			%>
+			<form action="analytics.jsp" method="POST">
+					<input type="hidden" name="action" value="search" />
+					Ages: <select name="age">
+	                    <option value="zero">0-9</option>
+	                    <option value="ten">10-19</option>
+	                    <option value="twenty">20-29</option>
+	                    <option value="thirty">30-39</option>
+	                    <option value="forty">40-49</option>
+	                    <option value="fifty">50-59</option>
+	                    <option value="sixty">60-69</option>
+	                    <option value="seventy">70-79</option>
+	                    <option value="eighty">80-89</option>
+	                    <option value="ninety">90-99</option>
+	                </select><br>
+					States: <select name="sta">
+						<option value="ALL">All States</option>
+						<option value="AL">Alabama</option>
+						<option value="AK">Alaska</option>
+						<option value="AZ">Arizona</option>
+						<option value="AR">Arkansas</option>
+						<option value="CA">California</option>
+						<option value="CO">Colorado</option>
+						<option value="CT">Connecticut</option>
+						<option value="DE">Delaware</option>
+						<option value="DC">District Of Columbia</option>
+						<option value="FL">Florida</option>
+						<option value="GA">Georgia</option>
+						<option value="HI">Hawaii</option>
+						<option value="ID">Idaho</option>
+						<option value="IL">Illinois</option>
+						<option value="IN">Indiana</option>
+						<option value="IA">Iowa</option>
+						<option value="KS">Kansas</option>
+						<option value="KY">Kentucky</option>
+						<option value="LA">Louisiana</option>
+						<option value="ME">Maine</option>
+						<option value="MD">Maryland</option>
+						<option value="MA">Massachusetts</option>
+						<option value="MI">Michigan</option>
+						<option value="MN">Minnesota</option>
+						<option value="MS">Mississippi</option>
+						<option value="MO">Missouri</option>
+						<option value="MT">Montana</option>
+						<option value="NE">Nebraska</option>
+						<option value="NV">Nevada</option>
+						<option value="NH">New Hampshire</option>
+						<option value="NJ">New Jersey</option>
+						<option value="NM">New Mexico</option>
+						<option value="NY">New York</option>
+						<option value="NC">North Carolina</option>
+						<option value="ND">North Dakota</option>
+						<option value="OH">Ohio</option>
+						<option value="OK">Oklahoma</option>
+						<option value="OR">Oregon</option>
+						<option value="PA">Pennsylvania</option>
+						<option value="RI">Rhode Island</option>
+						<option value="SC">South Carolina</option>
+						<option value="SD">South Dakota</option>
+						<option value="TN">Tennessee</option>
+						<option value="TX">Texas</option>
+						<option value="UT">Utah</option>
+						<option value="VT">Vermont</option>
+						<option value="VA">Virginia</option>
+						<option value="WA">Washington</option>
+						<option value="WV">West Virginia</option>
+						<option value="WI">Wisconsin</option>
+						<option value="WY">Wyoming</option>
+					</select><br>
+					Categories: <select name="category">
+	                    <% rs5 = statement5.executeQuery("SELECT * FROM CATEGORY");
+	                       while (rs5.next()) {
+	                       		out.println ("<option value=\"" + rs5.getString("nam") + "\">" + rs5.getString("nam") + "</option>");
+	                       } %>
+	                </select><br>
+	                Quarters: <select name="quarter">
+	                    <option value="spr">Spring</option>
+	                    <option value="sum">Summer</option>
+	                    <option value="fall">Fall</option>
+	                    <option value="win">Winter</option>
+	                </select><br>
+					<td><input type="submit" value="Filter" /></td>
+			</form>
+			<p> This table only shows the items that have been purchased before. </p>
     <div class="container">
     	  <div class="row">
     	  <div class="span10">
