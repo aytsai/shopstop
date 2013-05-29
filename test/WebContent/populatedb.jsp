@@ -1,3 +1,5 @@
+<!-- /home/patrick/Desktop/shopstop/ -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -17,8 +19,25 @@
 Connection conn = null;
 
 try {
+<<<<<<< HEAD
+	int TOTALCUSTOMERS = 50;
+=======
+	int TOTALCUSTOMERS = 12;
+>>>>>>> fixed the col/row number so that tey show properly
+	int TOTALPRODUCTS = 1000;
+	int TOTALPURCHASES = 10000;
+	
+	
 	Class.forName("com.mysql.jdbc.Driver");
+<<<<<<< HEAD
 	String filepath = "/Users/Alec/git/shopstop/test/WebContent/";
+=======
+<<<<<<< HEAD
+	String filepath = "/home/patrick/Desktop/shopstop/";
+=======
+	String filepath = "/home/patrick/Desktop/shopstop/"; // "C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\"; //
+>>>>>>> fixed the col/row number so that tey show properly
+>>>>>>> f6b70099899acbb930edb8dc95db88c3400c7d1e
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
@@ -54,7 +73,8 @@ try {
 	String state = null;
 	String name = null;
 	int age = 0;
-	for (int i=0; i < 1000; i++){
+
+	for (int i=0; i < TOTALCUSTOMERS; i++){
 		pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
 		if (i == 0){
 			pstmt.setString(1, "owner");
@@ -72,22 +92,32 @@ try {
 		}
 	}
 	
-    for (int i=0; i<CATEGORIES.length; i++){
+    for (int i=0; i<50; i++){
     	pstmt = conn.prepareStatement("INSERT INTO CATEGORY (nam, description, own) VALUES (?, ?, ?)");
     	pstmt.setString(1, CATEGORIES[i]);
     	pstmt.setString(2, ADJECTIVES[(int) (Math.random() * ADJECTIVES.length)]);
     	pstmt.setInt(3, 1);
     	int rowCount = pstmt.executeUpdate();
     }
-    for (int i=0; i<10000; i++){
+
+    for (int i=0; i<TOTALPRODUCTS; i++){
     	pstmt = conn.prepareStatement("INSERT INTO PRODUCTS (name, sku, cat, price) VALUES (?, ?, ?, ?)");
     	pstmt.setString(1, ADJECTIVES[(int) (Math.random() * ADJECTIVES.length)] + " " +
     						COLORS[(int) (Math.random() * COLORS.length)] + " " +
     						CATEGORIES[i%50]);
     	pstmt.setInt(2, i);
     	pstmt.setInt(3, (i%50) + 1);
-    	pstmt.setInt(4, (int) (Math.random() * 100));
+    	pstmt.setInt(4, (int) (Math.random() * 100 + 1));
     	int rowCount = pstmt.executeUpdate();
+    }
+    
+    for (int i=0; i<TOTALPURCHASES; i++){
+    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?)");
+    	pstmt.setInt(1, (int) (Math.random() * (TOTALCUSTOMERS - 1) + 2));
+    	pstmt.setInt(2, (int) (Math.random() * TOTALPRODUCTS + 1));
+    	pstmt.setInt(3, (int) (Math.random() * 10 + 1));
+    	pstmt.setString(4, "3698462392342355");
+    	int rowCount = pstmt.executeUpdate();		
     }
 	
     conn.commit();

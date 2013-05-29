@@ -93,6 +93,8 @@
 		Integer c;
 		Integer r;
 		Integer o;
+		Integer p;
+		Integer q;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
@@ -108,6 +110,10 @@
 			
 			if (request.getParameter("col") == null) o = 0;
 			else o = Integer.parseInt(request.getParameter("col").toString());
+			if (request.getParameter("col") == null) q = 0;
+			else q = Integer.parseInt(request.getParameter("col").toString());
+			if (request.getParameter("row") == null) p = 0;
+			else p = Integer.parseInt(request.getParameter("row").toString());
 			String st = "SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
                     "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10 " +
@@ -175,7 +181,7 @@
 		       out.println ("<a href=" + link + ">Prev</a><br>");
 		    %>
 			<br><br>
-			Showing rows 1 - 10
+			Showing rows <%=p*10 + 1%> - <%=(p+1)*10%>
 			<br><br>
 			<% if (session.getAttribute("row") == null) r = 1;
 			   else r = Integer.parseInt(session.getAttribute("row").toString()) + 1;
@@ -197,7 +203,7 @@
 		    %>
 			</div>
 			<div class="span2">
-			Showing cols 1-10
+			Showing cols <%=q*10 + 1%> - <%=(q+1)*10%>
 			</div>
 			<div class="span1 offset1">
 			<% if (session.getAttribute("col") == null) c = 1;
