@@ -19,13 +19,21 @@
 Connection conn = null;
 
 try {
+<<<<<<< HEAD
 	int TOTALCUSTOMERS = 50;
+=======
+	int TOTALCUSTOMERS = 12;
+>>>>>>> fixed the col/row number so that tey show properly
 	int TOTALPRODUCTS = 1000;
 	int TOTALPURCHASES = 10000;
 	
 	
 	Class.forName("com.mysql.jdbc.Driver");
+<<<<<<< HEAD
 	String filepath = "/home/patrick/Desktop/shopstop/";
+=======
+	String filepath = "/home/patrick/Desktop/shopstop/"; // "C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\"; //
+>>>>>>> fixed the col/row number so that tey show properly
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
