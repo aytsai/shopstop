@@ -215,9 +215,7 @@ body {
 			   if(!request.getParameter("category").equals("allcats"))
 				    l.add(String.format("CATEGORY.nam = '%s'", request.getParameter("category")));
 				
-				//ResultSet rs6 = conn.createStatement().executeQuery("SELECT * FROM CATEGORY");
-				//while (rs6.next())
-					*/
+				*/
 					
 				//Doing Quarter
 				if(!request.getParameter("quarter").equals("entire"))
