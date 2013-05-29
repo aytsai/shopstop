@@ -94,14 +94,11 @@
 		ResultSet rs4 = null;
 		ResultSet rs5 = null;
 		String link;
-		Integer c;
-		Integer r;
-		Integer o;
-		Integer p;
-		Integer q;
-		Integer rowcount;
-		Integer colcount;
+		Integer c, r, o, p, q;
+		Integer rowcount, colcount;
+		Integer minAge, maxAge;
 		try {
+			String action = request.getParameter("action");
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
@@ -121,27 +118,81 @@
 			else q = Integer.parseInt(request.getParameter("col").toString());
 			if (request.getParameter("row") == null) p = 0;
 			else p = Integer.parseInt(request.getParameter("row").toString());
+			// default display
 			String st = "SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
                     "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10 " +
 							"OFFSET " + o*10;
+			String st2 = "SELECT USERS.*" +
+                    "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+          			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+					"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+                    "OFFSET " + o*10;
 			rs = statement.executeQuery(st);
+			
+			if (action != null && action.equals("filter")) {
+				// TODO: check for null session attributes
+				String age = request.getParameter("age");
+				String state = request.getParameter("sta");
+				// parse categories and stuff here
+				if (!age.equals("allages")) {
+					if (age.equals("zero")) { minAge = 0; maxAge = 9; }
+					if (age.equals("ten")) { minAge = 10; maxAge = 19; }
+					if (age.equals("twenty")) { minAge = 20; maxAge = 29; }
+					if (age.equals("thirty")) { minAge = 30; maxAge = 39; }
+					if (age.equals("forty")) { minAge = 40; maxAge = 49; }
+					if (age.equals("fifty")) { minAge = 50; maxAge = 59; }
+					if (age.equals("sixty")) { minAge = 60; maxAge = 69; }
+					if (age.equals("seventy")) { minAge = 70; maxAge = 79; }
+					if (age.equals("eighty")) { minAge = 80; maxAge = 89; }
+					if (age.equals("ninety")) { minAge = 90; maxAge = 99; }
+				}
+				else {
+					minAge = 0;
+					maxAge = 0;
+				}
+				if (state.equals("ALL")) {
+					state = "";
+				}
+			}
+			
+			if (action != null && action.equals("table")) {
+				if ((request.getParameter("ty")).equals("stas"))
+					st = "";
+				else
+					st2 = "SELECT USERS.*" +
+		                  "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+	              	      "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+						  "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+	                      "OFFSET " + o*10;
+			}
+			
 			if (session.getAttribute("username") != null) {
 			%>
+			
 			<form action="analytics.jsp" method="POST">
-					<input type="hidden" name="action" value="search" />
+					<input type="hidden" name="action" value="table" />
+					Type: <select name="ty">
+	                    <option value="cust">Customers</option>
+	                    <option value="stas">States</option>
+	                </select>
+					<td><input type="submit" value="Table" /></td>
+			</form>
+			<form action="analytics.jsp" method="POST">
+					<input type="hidden" name="action" value="filter" />
 					Ages: <select name="age">
-	                    <option value="zero">0-9</option>
-	                    <option value="ten">10-19</option>
-	                    <option value="twenty">20-29</option>
-	                    <option value="thirty">30-39</option>
-	                    <option value="forty">40-49</option>
-	                    <option value="fifty">50-59</option>
-	                    <option value="sixty">60-69</option>
-	                    <option value="seventy">70-79</option>
-	                    <option value="eighty">80-89</option>
-	                    <option value="ninety">90-99</option>
-	                </select><br>
+	                    <option value="allages">All Ages</option>
+	                    <option value="zero">0 - 9</option>
+	                    <option value="ten">10 - 19</option>
+	                    <option value="twenty">20 - 29</option>
+	                    <option value="thirty">30 - 39</option>
+	                    <option value="forty">40 - 49</option>
+	                    <option value="fifty">50 - 59</option>
+	                    <option value="sixty">60 - 69</option>
+	                    <option value="seventy">70 - 79</option>
+	                    <option value="eighty">80 - 89</option>
+	                    <option value="ninety">90 - 99</option>
+	                </select>
 					States: <select name="sta">
 						<option value="ALL">All States</option>
 						<option value="AL">Alabama</option>
@@ -195,19 +246,21 @@
 						<option value="WV">West Virginia</option>
 						<option value="WI">Wisconsin</option>
 						<option value="WY">Wyoming</option>
-					</select><br>
+					</select>
 					Categories: <select name="category">
+					    <option value="allcats">All Categories</option>
 	                    <% rs5 = statement5.executeQuery("SELECT * FROM CATEGORY");
 	                       while (rs5.next()) {
 	                       		out.println ("<option value=\"" + rs5.getString("nam") + "\">" + rs5.getString("nam") + "</option>");
 	                       } %>
-	                </select><br>
+	                </select>
 	                Quarters: <select name="quarter">
+	                    <option value="entire">Full Year</option>
 	                    <option value="spr">Spring</option>
 	                    <option value="sum">Summer</option>
 	                    <option value="fall">Fall</option>
 	                    <option value="win">Winter</option>
-	                </select><br>
+	                </select>
 					<td><input type="submit" value="Filter" /></td>
 			</form>
 			<p> This table only shows the items that have been purchased before. </p>
@@ -230,11 +283,7 @@
               <%
               	if (request.getParameter("row") == null) o = 0;
   				else o = Integer.parseInt(request.getParameter("row").toString());
-              	rs2 = statement2.executeQuery("SELECT USERS.*" +
-	                    "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
-              			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-                        "OFFSET " + o*10);
+              	rs2 = statement2.executeQuery(st2);
                 while (rs2.next()) {
                 	if ((rs2.getString("role")).equals("Customer")) {
                 	rs = statement.executeQuery(st);
