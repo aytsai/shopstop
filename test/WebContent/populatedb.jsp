@@ -56,7 +56,7 @@ try {
 	String state = null;
 	String name = null;
 	int age = 0;
-	/*
+	
 	for (int i=0; i < 1000; i++){
 		pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
 		if (i == 0){
@@ -75,14 +75,15 @@ try {
 		}
 	}
 	
-    for (int i=0; i<CATEGORIES.length; i++){
+    for (int i=0; i<50; i++){
     	pstmt = conn.prepareStatement("INSERT INTO CATEGORY (nam, description, own) VALUES (?, ?, ?)");
     	pstmt.setString(1, CATEGORIES[i]);
     	pstmt.setString(2, ADJECTIVES[(int) (Math.random() * ADJECTIVES.length)]);
     	pstmt.setInt(3, 1);
     	int rowCount = pstmt.executeUpdate();
     }
-	*/
+    
+	
     for (int i=0; i<10000; i++){
     	pstmt = conn.prepareStatement("INSERT INTO PRODUCTS (name, sku, cat, price) VALUES (?, ?, ?, ?)");
     	pstmt.setString(1, ADJECTIVES[(int) (Math.random() * ADJECTIVES.length)] + " " +
@@ -90,8 +91,17 @@ try {
     						CATEGORIES[i%50]);
     	pstmt.setInt(2, i);
     	pstmt.setInt(3, (i%50) + 1);
-    	pstmt.setInt(4, (int) (Math.random() * 100));
+    	pstmt.setInt(4, (int) (Math.random() * 100 + 1));
     	int rowCount = pstmt.executeUpdate();
+    }
+    
+    for (int i=0; i<10000; i++){
+    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?)");
+    	pstmt.setInt(1, (int) (Math.random() * 1000 + 1));
+    	pstmt.setInt(2, (int) (Math.random() * 10000 + 1));
+    	pstmt.setInt(3, (int) (Math.random() * 10 + 1));
+    	pstmt.setString(4, "3698462392342355");
+    	int rowCount = pstmt.executeUpdate();		
     }
 	
     conn.commit();
