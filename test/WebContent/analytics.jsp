@@ -118,16 +118,26 @@
 			else q = Integer.parseInt(request.getParameter("col").toString());
 			if (request.getParameter("row") == null) p = 0;
 			else p = Integer.parseInt(request.getParameter("row").toString());
-			// default display
 			String st = "SELECT PRODUCTS.name, PRODUCTS.id, PRODUCTS.price " +
                     "FROM PURCHASES LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10 " +
 							"OFFSET " + o*10;
-			String st2 = "SELECT USERS.*" +
+			// default display
+			String st2;
+			if (session.getAttribute("ty") == null || session.getAttribute("ty").equals("cust")) {
+				st2 = "SELECT USERS.*" +
                     "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
           			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 					"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
                     "OFFSET " + o*10;
+			}
+			else {
+				st2 = "SELECT USERS.*" +
+			              "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+		              	  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+						  "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+		                  "OFFSET " + o*10;
+			}
 			rs = statement.executeQuery(st);
 			
 			if (action != null && action.equals("filter")) {
@@ -157,14 +167,21 @@
 			}
 			
 			if (action != null && action.equals("table")) {
-				if ((request.getParameter("ty")).equals("stas"))
-					st = "";
-				else
+				session.setAttribute("ty", request.getParameter("ty"));
+				if ((request.getParameter("ty")).equals("stas")) {
+					st2 = "SELECT USERS.*" +
+			              "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+		              	  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+						  "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+		                  "OFFSET " + o*10;
+				}
+				else {
 					st2 = "SELECT USERS.*" +
 		                  "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
 	              	      "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 						  "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
 	                      "OFFSET " + o*10;
+				}
 			}
 			
 			if (session.getAttribute("username") != null) {
@@ -285,28 +302,43 @@
   				else o = Integer.parseInt(request.getParameter("row").toString());
               	rs2 = statement2.executeQuery(st2);
                 while (rs2.next()) {
-                	if ((rs2.getString("role")).equals("Customer")) {
-                	rs = statement.executeQuery(st);
-                %>
-                	<tr><td><b>Name: <%= rs2.getString("nam") %></b><br>
-                	        Age: <%= rs2.getString("age") %><br>
-                	        State: <%= rs2.getString("sta") %><br></td><%
-                	while (rs.next()) {
-                		rs3 = statement3.executeQuery("SELECT COUNT(PURCHASES.amount), SUM(PURCHASES.amount)" +
-                									  "FROM PURCHASES WHERE PURCHASES.customer = '"
-                				                      + rs2.getString("id") + "' AND PURCHASES.product = '"
-                				                      + rs.getString("id") + "' GROUP BY PURCHASES.product");
-                		if (rs3.next()) {
-                	%>
-                		<td>Orders: <%= rs3.getString(1) %><br>
-                		    Value: $<%= rs3.getInt(2)*rs.getInt("price") %></td>
-                	<%
-                		}
-                		else {%><td>No records found.</td><%}
+	                	if ((rs2.getString("role")).equals("Customer")) {
+	                		if (session.getAttribute("ty") == null || (session.getAttribute("ty").toString()).equals("cust")) { 
+			                	rs = statement.executeQuery(st); %>
+			                	<tr><td><b>Name: <%= rs2.getString("nam") %></b><br>
+			                	        Age: <%= rs2.getString("age") %><br>
+			                	        State: <%= rs2.getString("sta") %><br></td><%
+			                	while (rs.next()) {
+			                		rs3 = statement3.executeQuery("SELECT COUNT(PURCHASES.amount), SUM(PURCHASES.amount)" +
+			                									  "FROM PURCHASES WHERE PURCHASES.customer = '"
+			                				                      + rs2.getString("id") + "' AND PURCHASES.product = '"
+			                				                      + rs.getString("id") + "' GROUP BY PURCHASES.product");
+			                		if (rs3.next()) { %>
+			                		<td>Orders: <%= rs3.getString(1) %><br>
+			                		    Value: $<%= rs3.getInt(2)*rs.getInt("price") %></td><%
+			                		}
+			                		else {%><td>No records found.</td><%}
+			                	}
+			                	%></tr><%
+			                } // decide which table
+			                else {
+			                	rs = statement.executeQuery(st); %>
+			                	<tr><td><b>State: <%= rs2.getString("sta") %></b><br></td><%
+			                	while (rs.next()) {
+			                		rs3 = statement3.executeQuery("SELECT COUNT(PURCHASES.amount), SUM(PURCHASES.amount)" +
+			                									  "FROM PURCHASES WHERE PURCHASES.customer = '"
+			                				                      + rs2.getString("id") + "' AND PURCHASES.product = '"
+			                				                      + rs.getString("id") + "' GROUP BY PURCHASES.product");
+			                		if (rs3.next()) { %>
+			                		<td>Orders: <%= rs3.getString(1) %><br>
+			                		    Value: $<%= rs3.getInt(2)*rs.getInt("price") %></td><%
+			                		}
+			                		else {%><td>No records found.</td><%}
+			                	}
+			                	%></tr><%
+			                } // decide which table
+		                }
                 	}
-                	%></tr><%
-                }
-                }
                  	%>
               </tbody>
             </table>
