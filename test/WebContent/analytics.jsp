@@ -54,7 +54,7 @@
               <% if (session.getAttribute("username") != null) {
             	  out.print("Logged in as " + session.getAttribute("username") + " ");
     		      out.print("<a href='/test/signout.jsp'>Log out?</a>");
-                }else
+                } else
                   out.print("<a href='/test/signin.jsp'>Log in</a>");
     		%>
             </p>
@@ -94,9 +94,10 @@
 		ResultSet rs4 = null;
 		ResultSet rs5 = null;
 		String link;
+		String custAge = "", custState = "";
 		Integer c, r, o, p, q;
 		Integer rowcount, colcount;
-		Integer minAge, maxAge;
+		Integer minAge = 0, maxAge = 0;
 		try {
 			String action = request.getParameter("action");
 			Class.forName("com.mysql.jdbc.Driver");
@@ -123,22 +124,40 @@
 					"GROUP BY PRODUCTS.id ORDER BY SUM(amount) DESC LIMIT 10 " +
 							"OFFSET " + o*10;
 			// default display
-			String st2;
+			String st2, st2b;
 			if (session.getAttribute("ty") == null || session.getAttribute("ty").equals("cust")) {
 				st2 = "SELECT USERS.*" +
-                    "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
-          			"LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+                    "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
+          		st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 					"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
                     "OFFSET " + o*10;
 			}
 			else {
 				st2 = "SELECT USERS.*" +
-			              "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
-		              	  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+			              "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
+		        st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
 						  "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
 		                  "OFFSET " + o*10;
 			}
 			rs = statement.executeQuery(st);
+			
+			if (action != null && action.equals("table")) {
+				session.setAttribute("ty", request.getParameter("ty"));
+				if ((request.getParameter("ty")).equals("stas")) {
+					st2 = "SELECT USERS.*" +
+			              "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
+		            st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+						  "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+		                  "OFFSET " + o*10;
+				}
+				else {
+					st2 = "SELECT USERS.*" +
+		                  "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
+	              	st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
+						  "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+	                      "OFFSET " + o*10;
+				}
+			}
 			
 			if (action != null && action.equals("filter")) {
 				// TODO: check for null session attributes
@@ -156,31 +175,16 @@
 					if (age.equals("seventy")) { minAge = 70; maxAge = 79; }
 					if (age.equals("eighty")) { minAge = 80; maxAge = 89; }
 					if (age.equals("ninety")) { minAge = 90; maxAge = 99; }
+					//custAge = "AND USERS.age >= " + minAge + " AND USERS.age <= " + maxAge + " ";
 				}
 				else {
-					minAge = 0;
-					maxAge = 0;
+					custAge = "";
 				}
-				if (state.equals("ALL")) {
-					state = "";
-				}
-			}
-			
-			if (action != null && action.equals("table")) {
-				session.setAttribute("ty", request.getParameter("ty"));
-				if ((request.getParameter("ty")).equals("stas")) {
-					st2 = "SELECT USERS.*" +
-			              "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
-		              	  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						  "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-		                  "OFFSET " + o*10;
+				if (!state.equals("ALL")) {
+					//custState = "AND USERS.sta = '" + state + "' ";
 				}
 				else {
-					st2 = "SELECT USERS.*" +
-		                  "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
-	              	      "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						  "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-	                      "OFFSET " + o*10;
+					custState = "";
 				}
 			}
 			
@@ -300,7 +304,8 @@
               <%
               	if (request.getParameter("row") == null) o = 0;
   				else o = Integer.parseInt(request.getParameter("row").toString());
-              	rs2 = statement2.executeQuery(st2);
+              	out.write(st2 + "AND USERS.sta = 'CA' " + st2b);
+              	rs2 = statement2.executeQuery(st2 + custAge + custState + st2b);
                 while (rs2.next()) {
 	                	if ((rs2.getString("role")).equals("Customer")) {
 	                		if (session.getAttribute("ty") == null || (session.getAttribute("ty").toString()).equals("cust")) { 
