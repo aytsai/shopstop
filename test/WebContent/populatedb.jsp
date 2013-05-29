@@ -39,6 +39,7 @@ try {
 			"ME", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", 
 			"NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", 
 			"WV", "WI", "WY"};
+	String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
 	String[] CATEGORIES = {"chair", "table", "computer", "keyboard", "burger", "french fries",
 	        "bike", "helmet", "couch", "mouse", "dog", "cat", "fish", "cell phone", "sweater", "pants", "shirt", "underwear",
 	        "sandwich", "bagel", "glove", "hat", "wheel", "car", "jacket", "coat", "monitor", "pen", "pencil", "paper", "notebook",
@@ -105,11 +106,12 @@ try {
     }
     
     for (int i=0; i<TOTALPURCHASES; i++){
-    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?)");
+    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, season, amount, creditcard) VALUES (?, ?, ?, ?, ?)");
     	pstmt.setInt(1, (int) (Math.random() * (TOTALCUSTOMERS - 1) + 2));
     	pstmt.setInt(2, (int) (Math.random() * TOTALPRODUCTS + 1));
-    	pstmt.setInt(3, (int) (Math.random() * 10 + 1));
-    	pstmt.setString(4, "3698462392342355");
+    	pstmt.setString(3, SEASONS[(int) (Math.random() * 4)]);
+    	pstmt.setInt(4, (int) (Math.random() * 10 + 1));
+    	pstmt.setString(5, "3698462392342355");
     	int rowCount = pstmt.executeUpdate();		
     }
 	
