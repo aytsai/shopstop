@@ -12,15 +12,13 @@
 <%@ page import="java.util.Scanner"%>
 <%@ page import="java.util.Vector"%>
 <%@ page import="java.io.File"%>
-<%@ page import="java.sql.*"%>
-<%@ page import="java.lang.Math"%>
 
 <%
 Connection conn = null;
 
 try {
 	Class.forName("com.mysql.jdbc.Driver");
-	String filepath = "/home/patrick/Desktop/shopstop/";
+	String filepath = "C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\";
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
@@ -56,7 +54,7 @@ try {
 	String state = null;
 	String name = null;
 	int age = 0;
-	
+
 	for (int i=0; i < 1000; i++){
 		pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
 		if (i == 0){
@@ -82,8 +80,7 @@ try {
     	pstmt.setInt(3, 1);
     	int rowCount = pstmt.executeUpdate();
     }
-    
-	
+
     for (int i=0; i<10000; i++){
     	pstmt = conn.prepareStatement("INSERT INTO PRODUCTS (name, sku, cat, price) VALUES (?, ?, ?, ?)");
     	pstmt.setString(1, ADJECTIVES[(int) (Math.random() * ADJECTIVES.length)] + " " +
