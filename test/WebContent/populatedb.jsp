@@ -1,5 +1,3 @@
-<!-- /home/patrick/Desktop/shopstop/ -->
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -19,14 +17,21 @@
 Connection conn = null;
 
 try {
-
 	int TOTALCUSTOMERS = 12;
 	int TOTALPRODUCTS = 1000;
 	int TOTALPURCHASES = 10000;
 	
 	
 	Class.forName("com.mysql.jdbc.Driver");
-	String filepath = "/home/patrick/Desktop/shopstop/";
+
+    String[] filepaths = {"C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\", "/Users/Alec/git/shopstop/test/WebContent/", "/home/patrick/Desktop/shopstop/"};
+	String filepath;
+
+	for(String f : filepaths)
+		if(new File(f).exists())
+			filepath = f;
+	
+
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
