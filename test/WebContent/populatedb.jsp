@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Populating the Database</title>
 </head>
 <body>
 
@@ -20,7 +20,6 @@ try {
 	int TOTALCUSTOMERS = 12;
 	int TOTALPRODUCTS = 1000;
 	int TOTALPURCHASES = 10000;
-	
 	
 	Class.forName("com.mysql.jdbc.Driver");
     String[] filepaths = {"C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\", "/Users/Alec/git/shopstop/test/WebContent/", "/home/patrick/Desktop/shopstop/"};
@@ -125,6 +124,7 @@ try {
 
 %>
 
+<img src="http://25.media.tumblr.com/tumblr_m1zchnWvsR1r3uq86o1_400.gif" alt="Lazin">
 
 </body>
 </html>
