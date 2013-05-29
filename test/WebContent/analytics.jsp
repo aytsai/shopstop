@@ -114,13 +114,7 @@
 							"OFFSET " + o*10;
 			rs = statement.executeQuery(st);
 			if (session.getAttribute("username") != null) {
-			%>
-				<form action="products.jsp" method="POST">
-					<input type="hidden" name="action" value="search" />
-					<input type="hidden" name="category" value="<%=session.getAttribute("category")%>" />
-					<input value="" name="nam" size="10"/>
-					<td><input type="submit" value="Search" /></td>
-				</form>
+			%><p> This table only shows the items that have been purchased before. </p>
     <div class="container">
     	  <div class="row">
     	  <div class="span10">
