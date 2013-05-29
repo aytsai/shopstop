@@ -83,6 +83,7 @@ body {
 	</div>
 
 	<%@ page import="java.sql.*"%>
+	<%@ page import="java.util.ArrayList"%>
 	<%
 		Connection conn = null;
 		Statement statement = null;
@@ -96,7 +97,7 @@ body {
 		ResultSet rs4 = null;
 		ResultSet rs5 = null;
 		String link;
-		String custAge = "", custState = "";
+		String filter; //Filter Query!!
 		Integer c, r, o, p, q;
 		Integer rowcount, colcount;
 		Integer minAge = 0, maxAge = 0;
@@ -161,38 +162,78 @@ body {
 				}
 			}
 			
-			if (action != null && action.equals("filter")) {
-				// TODO: check for null session attributes
+			/***************************************************/			
+			/***************************************************/
+			/* ***************** FILTER ********************** */
+			/***************************************************/
+			/***************************************************/
+			
+			//I wish we were using JDK 7, because String switch statements are possible.
+			
+			filter = "";
+			
+			if (action != null && action.equals("filter")) 
+			{
+				ArrayList<String> l = new ArrayList<String>(); //Dump commands here
+				
+				//Doing age
 				String age = request.getParameter("age");
-				String state = request.getParameter("sta");
-				// parse categories and stuff here
-				if (!age.equals("allages")) {
-					if (age.equals("zero")) { minAge = 0; maxAge = 9; }
-					if (age.equals("ten")) { minAge = 10; maxAge = 19; }
-					if (age.equals("twenty")) { minAge = 20; maxAge = 29; }
-					if (age.equals("thirty")) { minAge = 30; maxAge = 39; }
-					if (age.equals("forty")) { minAge = 40; maxAge = 49; }
-					if (age.equals("fifty")) { minAge = 50; maxAge = 59; }
-					if (age.equals("sixty")) { minAge = 60; maxAge = 69; }
-					if (age.equals("seventy")) { minAge = 70; maxAge = 79; }
-					if (age.equals("eighty")) { minAge = 80; maxAge = 89; }
-					if (age.equals("ninety")) { minAge = 90; maxAge = 99; }
-					custAge = "WHERE USERS.age >= " + minAge + " AND USERS.age <= " + maxAge + " ";
-				}
-				else {
-					custAge = "";
-				}
-				if (!state.equals("ALL")) {
-					if (custAge.equals(""))
-						custState = "WHERE USERS.sta = '" + state + "' ";
-					else
-						custState = "AND USERS.sta = '" + state + "' ";
-				}
-				else {
-					custState = "";
+				int temp = -1;
+				if(age.equals("zero"))
+					temp = 0;
+				else if(age.equals("ten"))
+					temp = 10;
+				else if(age.equals("twenty"))
+					temp = 20;
+				else if(age.equals("thirty"))
+					temp = 30;
+				else if(age.equals("forty"))
+					temp = 40;
+				else if(age.equals("fifty"))
+					temp = 50;
+				else if(age.equals("sixty"))
+					temp = 60;
+				else if(age.equals("seventy"))
+					temp = 70;
+				else if(age.equals("eighty"))
+					temp = 80;
+				else if(age.equals("ninety"))
+					temp = 90;
+				
+				if(temp >= 0)
+					l.add(String.format("USERS.age >= %d AND USERS.age <= %d", temp, temp+10));
+					
+				
+				//doing United States State
+				if(!request.getParameter("sta").equals("ALL"))
+					l.add(String.format("USERS.sta = '%s'", request.getParameter("sta")));
+				
+				
+				/*   CAVEAT: THIS IS TOTALLY BROKEN.  We might need to do a triple join here to get the proper numbers?
+				
+				//doing categories
+			   if(!request.getParameter("category").equals("allcats"))
+				    l.add(String.format("CATEGORY.nam = '%s'", request.getParameter("category")));
+				
+				//ResultSet rs6 = conn.createStatement().executeQuery("SELECT * FROM CATEGORY");
+				//while (rs6.next())
+					*/
+					
+				//Doing Quarter
+				if(!request.getParameter("quarter").equals("entire"))
+					l.add(String.format("PURCHASES.season = '%s'", request.getParameter("quarter")));	
+				
+				//Assemble bits
+				if(!l.isEmpty())
+				{
+					filter += " WHERE " + l.get(0) + " ";
+					for(int i = 1; i < l.size(); i++)
+						filter += " AND " + l.get(i);
 				}
 			}
 			
+		
+		
 			if (session.getAttribute("username") != null) {
 			%>
 
@@ -279,16 +320,24 @@ body {
 	                       } %>
 		</select> Quarters: <select name="quarter">
 			<option value="entire">Full Year</option>
-			<option value="spr">Spring</option>
-			<option value="sum">Summer</option>
-			<option value="fall">Fall</option>
-			<option value="win">Winter</option>
+			<option value="Spring">Spring</option>
+			<option value="Summer">Summer</option>
+			<option value="Fall">Fall</option>
+			<option value="Winter">Winter</option>
 		</select>
+
+
 		<td><input type="submit" value="Filter" /></td>
 	</form>
 	<p>This table only shows the items that have been purchased before.</p>
-	
-	
+
+	<!-- 				   -->
+	<!-- 				   -->
+	<!--  BEGIN TABLE AREA -->
+	<!-- 				   -->
+	<!-- 				   -->
+
+
 	<div class="container">
 		<div class="row">
 			<div class="span10">
@@ -308,7 +357,10 @@ body {
 						<%
               	if (request.getParameter("row") == null) o = 0;
   				else o = Integer.parseInt(request.getParameter("row").toString());
-              	rs2 = statement2.executeQuery(st2 + custAge + custState + st2b + o*10);
+						
+						
+						
+              	rs2 = statement2.executeQuery(st2 + filter + st2b + o*10);
                 while (rs2.next()) {
 	                	if ((rs2.getString("role")).equals("Customer")) {
 	                		if (session.getAttribute("ty") == null || (session.getAttribute("ty").toString()).equals("cust")) { 
@@ -361,13 +413,7 @@ body {
 				</table>
 			</div>
 			<div class="span2">
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
+				<br> <br> <br> <br> <br> <br> <br>
 				<br>
 				<% if (session.getAttribute("row") == null || session.getAttribute("row").equals("0")) r = 0;
 			   else r = Integer.parseInt(session.getAttribute("row").toString()) - 1;
@@ -375,13 +421,11 @@ body {
 		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
 		       if (session.getAttribute("row") != null && !(session.getAttribute("row").equals("0"))) out.println ("<a href=" + link + ">Prev</a><br>");
 		    %>
-				<br>
-				<br> Showing rows
+				<br> <br> Showing rows
 				<%=p*10 + 1%>
 				-
 				<%=(p+1)*10%>
-				<br>
-				<br>
+				<br> <br>
 				<% if (session.getAttribute("row") == null) r = 1;
 			   else r = Integer.parseInt(session.getAttribute("row").toString()) + 1;
 			   link = "analytics.jsp?row=" + r;

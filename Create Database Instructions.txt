@@ -1,0 +1,7 @@
+mysql -u root -p
+
+create database cse135;
+use cse135;
+CREATE USER test IDENTIFIED BY 'test'; 
+grant usage on *.* to test@localhost identified by 'test';
+grant all privileges on cse135.* to test@localhost;
