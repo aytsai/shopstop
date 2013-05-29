@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,12 +8,12 @@
 </head>
 <body>
 
-<%@ page import="java.sql.*"%>
-<%@ page import="java.util.Scanner"%>
-<%@ page import="java.util.Vector"%>
-<%@ page import="java.io.File"%>
+	<%@ page import="java.sql.*"%>
+	<%@ page import="java.util.Scanner"%>
+	<%@ page import="java.util.Vector"%>
+	<%@ page import="java.io.File"%>
 
-<%
+	<%
 Connection conn = null;
 
 try {
@@ -128,7 +128,9 @@ try {
 
 %>
 
-<img src="http://25.media.tumblr.com/tumblr_m1zchnWvsR1r3uq86o1_400.gif" alt="Lazin">
-
+	<img
+		src="http://25.media.tumblr.com/tumblr_m1zchnWvsR1r3uq86o1_400.gif"
+		alt="Lazin">
+     <p>If you're seeing this, you need to drop all the tables in your database before running populatedb.jsp.</p>
 </body>
 </html>
