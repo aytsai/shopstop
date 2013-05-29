@@ -24,7 +24,7 @@ try {
 	Class.forName("com.mysql.jdbc.Driver");
 
     String[] filepaths = {"C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\", "/Users/Alec/git/shopstop/test/WebContent/", "/home/patrick/Desktop/shopstop/"};
-	String filepath;
+	String filepath = "";
 
 	for(String f : filepaths)
 		if(new File(f).exists())
