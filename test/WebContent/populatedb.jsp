@@ -22,6 +22,7 @@ try {
 	int TOTALPURCHASES = 10000;
 	
 	Class.forName("com.mysql.jdbc.Driver");
+
     String[] filepaths = {"C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\", "/Users/Alec/git/shopstop/test/WebContent/", "/home/patrick/Desktop/shopstop/"};
 	String filepath;
 
@@ -29,6 +30,7 @@ try {
 		if(new File(f).exists())
 			filepath = f;
 	
+
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
