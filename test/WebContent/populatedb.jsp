@@ -1,3 +1,5 @@
+<!-- /home/patrick/Desktop/shopstop/ -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -17,8 +19,13 @@
 Connection conn = null;
 
 try {
+	int TOTALCUSTOMERS = 50;
+	int TOTALPRODUCTS = 1000;
+	int TOTALPURCHASES = 10000;
+	
+	
 	Class.forName("com.mysql.jdbc.Driver");
-	String filepath = "C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\";
+	String filepath = "/home/patrick/Desktop/shopstop/";
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
@@ -55,7 +62,7 @@ try {
 	String name = null;
 	int age = 0;
 
-	for (int i=0; i < 1000; i++){
+	for (int i=0; i < TOTALCUSTOMERS; i++){
 		pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
 		if (i == 0){
 			pstmt.setString(1, "owner");
@@ -81,7 +88,7 @@ try {
     	int rowCount = pstmt.executeUpdate();
     }
 
-    for (int i=0; i<10000; i++){
+    for (int i=0; i<TOTALPRODUCTS; i++){
     	pstmt = conn.prepareStatement("INSERT INTO PRODUCTS (name, sku, cat, price) VALUES (?, ?, ?, ?)");
     	pstmt.setString(1, ADJECTIVES[(int) (Math.random() * ADJECTIVES.length)] + " " +
     						COLORS[(int) (Math.random() * COLORS.length)] + " " +
@@ -92,10 +99,10 @@ try {
     	int rowCount = pstmt.executeUpdate();
     }
     
-    for (int i=0; i<10000; i++){
+    for (int i=0; i<TOTALPURCHASES; i++){
     	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?)");
-    	pstmt.setInt(1, (int) (Math.random() * 1000 + 1));
-    	pstmt.setInt(2, (int) (Math.random() * 10000 + 1));
+    	pstmt.setInt(1, (int) (Math.random() * (TOTALCUSTOMERS - 1) + 2));
+    	pstmt.setInt(2, (int) (Math.random() * TOTALPRODUCTS + 1));
     	pstmt.setInt(3, (int) (Math.random() * 10 + 1));
     	pstmt.setString(4, "3698462392342355");
     	int rowCount = pstmt.executeUpdate();		
