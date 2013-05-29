@@ -126,36 +126,36 @@
 			// default display
 			String st2, st2b;
 			if (session.getAttribute("ty") == null || session.getAttribute("ty").equals("cust")) {
-				st2 = "SELECT USERS.*" +
-                    "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
-          		st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-					"GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-                    "OFFSET " + o*10;
+				st2 = "SELECT USERS.* " +
+                      "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+          		      "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
+          		st2b = "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+                       "OFFSET " + o*10;
 			}
 			else {
-				st2 = "SELECT USERS.*" +
-			              "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
-		        st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						  "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-		                  "OFFSET " + o*10;
+				st2 = "SELECT USERS.* " +
+			          "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+		        	  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
+		        st2b = "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+		               "OFFSET " + o*10;
 			}
 			rs = statement.executeQuery(st);
 			
 			if (action != null && action.equals("table")) {
 				session.setAttribute("ty", request.getParameter("ty"));
 				if ((request.getParameter("ty")).equals("stas")) {
-					st2 = "SELECT USERS.*" +
-			              "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
-		            st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						  "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-		                  "OFFSET " + o*10;
+					st2 = "SELECT USERS.* " +
+			              "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+		                  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
+		            st2b = "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+		                   "OFFSET " + o*10;
 				}
 				else {
-					st2 = "SELECT USERS.*" +
-		                  "FROM PURCHASES LEFT JOIN USERS ON (USERS.id = PURCHASES.customer ";
-	              	st2b = ") LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
-						  "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-	                      "OFFSET " + o*10;
+					st2 = "SELECT USERS.* " +
+		                  "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
+	              	      "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
+	              	st2b = "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
+	                       "OFFSET " + o*10;
 				}
 			}
 			
@@ -175,13 +175,16 @@
 					if (age.equals("seventy")) { minAge = 70; maxAge = 79; }
 					if (age.equals("eighty")) { minAge = 80; maxAge = 89; }
 					if (age.equals("ninety")) { minAge = 90; maxAge = 99; }
-					//custAge = "AND USERS.age >= " + minAge + " AND USERS.age <= " + maxAge + " ";
+					custAge = "WHERE USERS.age >= " + minAge + " AND USERS.age <= " + maxAge + " ";
 				}
 				else {
 					custAge = "";
 				}
 				if (!state.equals("ALL")) {
-					//custState = "AND USERS.sta = '" + state + "' ";
+					if (custAge.equals(""))
+						custState = "WHERE USERS.sta = '" + state + "' ";
+					else
+						custState = "AND USERS.sta = '" + state + "' ";
 				}
 				else {
 					custState = "";
@@ -304,7 +307,6 @@
               <%
               	if (request.getParameter("row") == null) o = 0;
   				else o = Integer.parseInt(request.getParameter("row").toString());
-              	out.write(st2 + "AND USERS.sta = 'CA' " + st2b);
               	rs2 = statement2.executeQuery(st2 + custAge + custState + st2b);
                 while (rs2.next()) {
 	                	if ((rs2.getString("role")).equals("Customer")) {
