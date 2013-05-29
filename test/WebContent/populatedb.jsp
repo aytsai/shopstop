@@ -18,7 +18,7 @@ Connection conn = null;
 
 try {
 	Class.forName("com.mysql.jdbc.Driver");
-	String filepath = "C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\";
+	String filepath = "/Users/Alec/git/shopstop/test/WebContent/";
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
