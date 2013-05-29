@@ -130,14 +130,14 @@
                       "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
           		      "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
           		st2b = "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-                       "OFFSET " + o*10;
+                       "OFFSET ";
 			}
 			else {
 				st2 = "SELECT USERS.* " +
 			          "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
 		        	  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
 		        st2b = "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-		               "OFFSET " + o*10;
+		               "OFFSET ";
 			}
 			rs = statement.executeQuery(st);
 			
@@ -148,14 +148,14 @@
 			              "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
 		                  "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
 		            st2b = "GROUP BY USERS.sta ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-		                   "OFFSET " + o*10;
+		                   "OFFSET ";
 				}
 				else {
 					st2 = "SELECT USERS.* " +
 		                  "FROM PURCHASES LEFT JOIN USERS ON USERS.id = PURCHASES.customer " +
 	              	      "LEFT JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product ";
 	              	st2b = "GROUP BY USERS.id ORDER BY SUM(amount*price) DESC LIMIT 10 " +
-	                       "OFFSET " + o*10;
+	                       "OFFSET ";
 				}
 			}
 			
@@ -307,7 +307,7 @@
               <%
               	if (request.getParameter("row") == null) o = 0;
   				else o = Integer.parseInt(request.getParameter("row").toString());
-              	rs2 = statement2.executeQuery(st2 + custAge + custState + st2b);
+              	rs2 = statement2.executeQuery(st2 + custAge + custState + st2b + o*10);
                 while (rs2.next()) {
 	                	if ((rs2.getString("role")).equals("Customer")) {
 	                		if (session.getAttribute("ty") == null || (session.getAttribute("ty").toString()).equals("cust")) { 
@@ -368,7 +368,7 @@
 		       statement4 = conn.createStatement();
 		       rs4 = statement4.executeQuery("SELECT COUNT(*) FROM USERS");
 		       rs4.next();
-		       if ((r*10) < rs4.getInt(1)) out.println ("<a href=" + link + ">Next</a><br>");
+		       if ((p+1)*10 < rs4.getInt(1)) out.println ("<a href=" + link + ">Next</a><br>");
 		    %>
 		    
 		    
@@ -394,7 +394,7 @@
 		       statement4 = conn.createStatement();
 		       rs4 = statement4.executeQuery("SELECT COUNT(*) FROM PRODUCTS");
 		       rs4.next();
-		       if ((c*10) < rs4.getInt(1)) out.println ("<a href=" + link + ">Next</a><br>");
+		       if ((q+1)*10 < rs4.getInt(1)) out.println ("<a href=" + link + ">Next</a><br>");
 		    %>
 			</div>
 			</div>
