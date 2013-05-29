@@ -1,5 +1,3 @@
-<!-- /home/patrick/Desktop/shopstop/ -->
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -19,25 +17,19 @@
 Connection conn = null;
 
 try {
-<<<<<<< HEAD
-	int TOTALCUSTOMERS = 50;
-=======
 	int TOTALCUSTOMERS = 12;
->>>>>>> fixed the col/row number so that tey show properly
 	int TOTALPRODUCTS = 1000;
 	int TOTALPURCHASES = 10000;
 	
 	
 	Class.forName("com.mysql.jdbc.Driver");
-<<<<<<< HEAD
-	String filepath = "/Users/Alec/git/shopstop/test/WebContent/";
-=======
-<<<<<<< HEAD
-	String filepath = "/home/patrick/Desktop/shopstop/";
-=======
-	String filepath = "/home/patrick/Desktop/shopstop/"; // "C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\"; //
->>>>>>> fixed the col/row number so that tey show properly
->>>>>>> f6b70099899acbb930edb8dc95db88c3400c7d1e
+    String[] filepaths = {"C:\\Users\\Mei\\Documents\\GitHub\\shopstop\\test\\WebContent\\", "/Users/Alec/git/shopstop/test/WebContent/", "/home/patrick/Desktop/shopstop/"};
+	String filepath;
+
+	for(String f : filepaths)
+		if(new File(f).exists())
+			filepath = f;
+	
 	conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 	PreparedStatement pstmt = null;
 	Vector<String> firstNames = new Vector();
