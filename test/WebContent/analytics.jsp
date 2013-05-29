@@ -89,12 +89,16 @@
 		ResultSet rs = null;
 		ResultSet rs2 = null;
 		ResultSet rs3 = null;
+		ResultSet rs4 = null;
+		Statement statement4 = null;
 		String link;
 		Integer c;
 		Integer r;
 		Integer o;
 		Integer p;
 		Integer q;
+		Integer rowcount;
+		Integer colcount;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
@@ -178,7 +182,7 @@
 			   else r = Integer.parseInt(session.getAttribute("row").toString()) - 1;
 			   link = "analytics.jsp?row=" + r;
 		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
-		       out.println ("<a href=" + link + ">Prev</a><br>");
+		       if (session.getAttribute("row") != null && !(session.getAttribute("row").equals("0"))) out.println ("<a href=" + link + ">Prev</a><br>");
 		    %>
 			<br><br>
 			Showing rows <%=p*10 + 1%> - <%=(p+1)*10%>
@@ -187,7 +191,10 @@
 			   else r = Integer.parseInt(session.getAttribute("row").toString()) + 1;
 			   link = "analytics.jsp?row=" + r;
 		       if (session.getAttribute("col") != null) link += "&col=" + session.getAttribute("col");
-		       out.println ("<a href=" + link + ">Next</a><br>");
+		       statement4 = conn.createStatement();
+		       rs4 = statement4.executeQuery("SELECT COUNT(*) FROM USERS");
+		       rs4.next();
+		       if ((r*10) < rs4.getInt(1)) out.println ("<a href=" + link + ">Next</a><br>");
 		    %>
 		    
 		    
@@ -199,7 +206,7 @@
 			   else c = Integer.parseInt(session.getAttribute("col").toString()) - 1;
 			   link = "analytics.jsp?col=" + c;
 		       if (session.getAttribute("row") != null) link += "&row=" + session.getAttribute("row");
-		       out.println ("<a href=" + link + ">Prev</a><br>");
+		       if (session.getAttribute("col") != null && !(session.getAttribute("col").equals("0"))) out.println ("<a href=" + link + ">Prev</a><br>");
 		    %>
 			</div>
 			<div class="span2">
@@ -210,7 +217,10 @@
 			   else c = Integer.parseInt(session.getAttribute("col").toString()) + 1;
 			   link = "analytics.jsp?col=" + c;
 		       if (session.getAttribute("row") != null) link += "&row=" + session.getAttribute("row");
-		       out.println ("<a href=" + link + ">Next</a><br>");
+		       statement4 = conn.createStatement();
+		       rs4 = statement4.executeQuery("SELECT COUNT(*) FROM PRODUCTS");
+		       rs4.next();
+		       if ((c*10) < rs4.getInt(1)) out.println ("<a href=" + link + ">Next</a><br>");
 		    %>
 			</div>
 			</div>
