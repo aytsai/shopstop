@@ -12,8 +12,6 @@
 <%@ page import="java.util.Scanner"%>
 <%@ page import="java.util.Vector"%>
 <%@ page import="java.io.File"%>
-<%@ page import="java.sql.*"%>
-<%@ page import="java.lang.Math"%>
 
 <%
 Connection conn = null;
