@@ -143,8 +143,8 @@
 			statement.close();
 			conn.close();
 		} catch (Exception e) {
-			System.out.println (e);
-			System.out.println ("also you suck?!?!??!?!??!!??!");
+			e.printStackTrace();
+			System.err.println ("also you suck?!?!??!?!??!!??!");
 		}
 	%>
 
