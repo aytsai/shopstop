@@ -115,15 +115,17 @@
 						pstmt.execute();
 						rs2 = pstmt.getResultSet();
 						while (rs2.next()){
-							pstmt2 = conn.prepareStatement("INSERT INTO cse135.PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?) ");
+							pstmt2 = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, season, amount, creditcard, today) VALUES (?, ?, ?, ?, ?, ?) ");
 							pstmt2.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
 							pstmt2.setInt(2, Integer.parseInt(rs2.getString("product")));
-							pstmt2.setInt(3, Integer.parseInt(rs2.getString("amount")));
-							pstmt2.setString(4, request.getParameter("creditcard"));
+							pstmt2.setString(3, "Spring");
+							pstmt2.setInt(4, Integer.parseInt(rs2.getString("amount")));
+							pstmt2.setString(5, request.getParameter("creditcard"));
+							pstmt2.setInt(6, 1);
 							pstmt2.executeUpdate();
 						}
 						conn.commit();
-						conn.setAutoCommit(true);
+						conn.setAutoCommit(false);
 						response.sendRedirect("/test/purchase.jsp");
 					}
 					%>
@@ -188,9 +190,8 @@
 			productName.close();
 			statement.close();
 			conn.close();
-		} catch (Exception e) {
-			System.out.println (e);
-			System.out.println ("also you suck?!!?!?!?!??!");
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 	%>
 

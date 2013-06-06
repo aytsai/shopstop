@@ -142,7 +142,7 @@
 			rs.close();
 			statement.close();
 			conn.close();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			System.err.println ("also you suck?!?!??!?!??!!??!");
 		}

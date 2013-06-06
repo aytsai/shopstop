@@ -106,12 +106,13 @@ try {
     }
     
     for (int i=0; i<TOTALPURCHASES; i++){
-    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, season, amount, creditcard) VALUES (?, ?, ?, ?, ?)");
+    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, season, amount, creditcard, today) VALUES (?, ?, ?, ?, ?, ?)");
     	pstmt.setInt(1, (int) (Math.random() * (TOTALCUSTOMERS - 1) + 2));
     	pstmt.setInt(2, (int) (Math.random() * TOTALPRODUCTS + 1));
     	pstmt.setString(3, SEASONS[(int) (Math.random() * 4)]);
     	pstmt.setInt(4, (int) (Math.random() * 10 + 1));
     	pstmt.setString(5, "3698462392342355");
+    	pstmt.setInt(6, 0);
     	int rowCount = pstmt.executeUpdate();		
     }
 	
@@ -120,9 +121,8 @@ try {
     response.sendRedirect("/test/");
 	
 	
-} catch (Exception e) {
-	System.out.println (e);
-	System.out.println ("also you suck?!?");
+} catch (Throwable e) {
+	e.printStackTrace();
 }
 
 

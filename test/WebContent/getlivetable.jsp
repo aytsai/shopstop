@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
-
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.HashMap"%>
 <%@ page import="java.util.ArrayList"%>
@@ -14,6 +12,7 @@
 /**
  * Simple class to keep track fo States, categories, and their respective prices.
  *
+ * @author Alec
  */
 public static class Sta 
 {
@@ -183,17 +182,16 @@ public static class StaOrganizer
 }
 
 %>
-
-
+<%! private static int counter = 0; %>
+<!--  
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Live Table View</title>
+
 </head>
 <body>
-
-
-
+-->
 <%
 	Class.forName("com.mysql.jdbc.Driver");
 
@@ -202,17 +200,18 @@ try
 	Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
     conn.setAutoCommit(false);
     
-    ResultSet rs = conn.createStatement().executeQuery("SELECT USERS.sta, CATEGORY.nam, PRODUCTS.price " + 
+    ResultSet rs = conn.createStatement().executeQuery("SELECT USERS.sta, CATEGORY.nam, PRODUCTS.price, PURCHASES.amount " + 
    		 "FROM PURCHASES " +
    		 "INNER JOIN PRODUCTS ON PRODUCTS.id = PURCHASES.product " +
    		 "INNER JOIN CATEGORY ON PRODUCTS.cat = CATEGORY.id " + 
    		 "INNER JOIN USERS ON USERS.id = PURCHASES.customer " + 
+   		 "WHERE PURCHASES.today = 1 " + 
    		 "ORDER BY USERS.sta, CATEGORY.nam;");
-    
+
     
     StaOrganizer o = new StaOrganizer();
     while(rs.next())
-   	  o.add(rs.getString(1), rs.getString(2), rs.getInt(3));
+   	  o.add(rs.getString(1), rs.getString(2), rs.getInt(3)*rs.getInt(4));
     
    
     String[] cats = o.getCatList();
@@ -241,7 +240,7 @@ catch(Throwable e)
 }
 %>
 
-
-
+<p>This page has been refreshed <%= counter++ %> times.</p>
+<!--  
 </body>
-</html>
+</html>-->
