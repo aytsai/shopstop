@@ -217,7 +217,8 @@ try
     String[] cats = o.getCatList();
     String[] states = o.getStateList();
     
-    String dump = "<table border=\"1\">\n<tr><th> </th>\n";
+    String dump = "<h2 style=\"font-family:Trebuchet MS;font-weight:bold;text-align:center\">Live Purchases Report Viewer</h2>";
+    dump += "<table border=\"1\" class=\"table table-bordered table-hover\">\n<tr><th> </th>\n";
     for(String s : cats)
    	  dump += "<th>" + s + "</th>\n";
    	dump += "</tr>\n";
@@ -240,7 +241,7 @@ catch(Throwable e)
 }
 %>
 
-<p>This page has been refreshed <%= counter++ %> times.</p>
+<p style="font-family:Trebuchet MS;font-weight:bold;text-align:center">This page has been refreshed <%= counter++ %> times!</p>
 <!--  
 </body>
 </html>-->
