@@ -65,6 +65,7 @@ body {
 						<% if (session.getAttribute("username") != null){ %>
 						<% if (session.getAttribute("role").equals("Owner")){ %>
 						<li><a href="/test/category.jsp">Categories</a></li>
+                        <li><a href="/test/livetable.jsp">Live Report</a></li>
 						<li class="active"><a href="/test/analytics.jsp">Analytics</a></li>
 						<% } %>
 						<li><a href="/test/products.jsp">Products</a></li>
