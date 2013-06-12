@@ -31,6 +31,7 @@
       }
     </style>
     <link href="./css/bootstrap-responsive.css" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -77,20 +78,33 @@
       </div>
     </div>
 
-
+	<%@page import="java.util.*, org.json.simple.JSONObject" %>
+<%@ page import="java.io.*,javax.servlet.*,java.text.*" %>
+<%@ page import="net.sf.json.*"%>
 	<%@ page import="java.sql.*"%>
 	<%
+		String [] states = {"","AK","AL","AR","AS","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID",
+  			"IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY",
+  			"OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY"};
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		Statement statement = null;
 		ResultSet rs = null;
+		ResultSet rs8 = null;
+		ResultSet rs10 = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
 		    rs = statement.executeQuery("select * from cse135.CATEGORY");
 		    String action = request.getParameter("action");
-		
+		    
+		    LinkedHashMap<String, LinkedHashMap<String, Integer> > purchases
+        	= (LinkedHashMap<String, LinkedHashMap<String, Integer> >) application.getAttribute("purchases");
+		    
+		    LinkedHashMap<String, LinkedHashMap<String, Integer> > newThings
+        	= (LinkedHashMap<String, LinkedHashMap<String, Integer> >) application.getAttribute("newThings");
+		    
 		   	if (session.getAttribute("username") != null) {
 		   		out.println ("Hello " + session.getAttribute("username"));
 				if (session.getAttribute("role").equals("Owner")) {
@@ -101,6 +115,12 @@
 						pstmt.setString(1, request.getParameter("nam"));
 						pstmt.setString(2, request.getParameter("description"));
 						pstmt.setInt(3, (Integer) session.getAttribute("userid"));
+						LinkedHashMap<String, Integer> thing = new LinkedHashMap<String, Integer>();
+						
+						for (int i = 1; i < states.length; i++)
+							thing.put(states[i], 0);
+						purchases.put(request.getParameter("nam"), thing);
+						
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
@@ -108,6 +128,26 @@
 		            }
 					if (action != null && action.equals("update")) {
 						conn.setAutoCommit(false);
+						
+						// gotta change the stuff in the hash map
+						rs10 = statement.executeQuery("SELECT CATEGORY.nam FROM CATEGORY WHERE id = '"
+														+ Integer.parseInt(request.getParameter("id")) + "'");
+						rs10.next();
+						LinkedHashMap<String, Integer> newTemp = new LinkedHashMap<String, Integer>();
+						LinkedHashMap<String, Integer> newTemp2 = new LinkedHashMap<String, Integer>();
+						for (int i = 1; i < states.length; i++) {
+							newTemp.put(states[i], purchases.get(rs10.getString("nam")).get(states[i]));
+							if (newThings.get(rs10.getString("nam")) != null)
+								newTemp2.put(states[i], newThings.get(rs10.getString("nam")).get(states[i]));
+						}
+						purchases.put (request.getParameter("nam"), newTemp);
+						purchases.remove (rs10.getString("nam"));
+						if (newThings.get(rs10.getString("nam")) != null) {
+							newThings.put (request.getParameter("nam"), newTemp2);
+							newThings.remove (rs10.getString("nam"));
+						}
+						
+						
 						pstmt = conn.prepareStatement(
 								"UPDATE CATEGORY SET nam = ?, description = ? WHERE id = ?");
 						pstmt.setString(1, request.getParameter("nam"));
@@ -199,5 +239,18 @@
 			System.out.println ("also you suck?!?!");
 		}
 	%>
+	
+    <script src="./js/bootstrap-transition.js"></script>
+    <script src="./js/bootstrap-alert.js"></script>
+    <script src="./js/bootstrap-modal.js"></script>
+    <script src="./js/bootstrap-dropdown.js"></script>
+    <script src="./js/bootstrap-scrollspy.js"></script>
+    <script src="./js/bootstrap-tab.js"></script>
+    <script src="./js/bootstrap-tooltip.js"></script>
+    <script src="./js/bootstrap-popover.js"></script>
+    <script src="./js/bootstrap-button.js"></script>
+    <script src="./js/bootstrap-collapse.js"></script>
+    <script src="./js/bootstrap-carousel.js"></script>
+    <script src="./js/bootstrap-typeahead.js"></script>
 </body>
 </html>

@@ -63,7 +63,6 @@
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
               <li><a href="/test/analytics.jsp">Analytics</a></li>
-              <li><a href="/test/livetable.jsp">Live Report</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <li class="active"><a href="/test/shoppingcart.jsp">My Cart</a></li>
@@ -74,22 +73,32 @@
     </div>
 
 
-
+<%@ page import="java.util.*, org.json.simple.JSONObject" %>
+<%@ page import="java.io.*,javax.servlet.*,java.text.*" %>
 	<%@ page import="java.sql.*"%>
 	<%
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
+		PreparedStatement pstmt4 = null;
 		Statement statement = null;
+		Statement statement2 = null;
 		ResultSet rs = null;
 		ResultSet rs2 = null;
+		ResultSet rs4 = null;
 		ResultSet productName = null;
 		PreparedStatement pstmt3 = null;
 		int total = 0;
 		try {
+			if(application.getAttribute("newThings") == null) 
+	            application.setAttribute("newThings", new LinkedHashMap<String, LinkedHashMap<String, Integer> >());
+   			LinkedHashMap<String, LinkedHashMap<String, Integer> > newThings
+				= (LinkedHashMap<String, LinkedHashMap<String, Integer> >) application.getAttribute("newThings");
+   			
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/cse135?user=test&password=test");
 			statement = conn.createStatement();
+			statement2 = conn.createStatement();
 		    rs = statement.executeQuery("select * from cse135.SHOPPINGCART WHERE customer = " +
 												session.getAttribute("userid").toString());
 		    String action = request.getParameter("action");
@@ -125,7 +134,33 @@
 				   total += temp;%>
 				<td><%=temp%></td>
 		</tr>
-		<%
+		<%	
+				// add stuff to the new purchases map
+				pstmt4 = conn.prepareStatement("select * from cse135.CATEGORY WHERE CATEGORY.id = '"
+						                    + productName.getString("cat") + "'");
+				pstmt4.execute();
+				rs4 = pstmt4.getResultSet();
+				rs4.next();
+				
+				if (newThings.get(rs4.getString("nam")) != null) {
+				    LinkedHashMap<String, Integer> thing = newThings.get(rs4.getString("nam"));
+					if (thing.get(session.getAttribute("st")) != null) {
+						Integer val = thing.get(session.getAttribute("st"));
+						val += temp;
+						thing.put(session.getAttribute("st").toString(), val);
+						newThings.put(rs4.getString("nam"), thing);
+					}
+					else {
+						thing.put(session.getAttribute("st").toString(), temp);
+						newThings.put(rs4.getString("nam"), thing);
+					}
+				}
+				else {
+					LinkedHashMap<String, Integer> thing = new LinkedHashMap<String, Integer>();
+					thing.put(session.getAttribute("st").toString(), temp);
+					newThings.put(rs4.getString("nam"), thing);
+				}
+				
 				pstmt3.executeUpdate();
 			}
 			out.println ("Total: " + total);
@@ -140,12 +175,14 @@
 		   	else {
 		   		out.println ("Please log in.");
 		   	}
+		   	rs4.close();
 			rs.close();
+			statement2.close();
 			statement.close();
 			conn.close();
-		} catch (Throwable e) {
-			e.printStackTrace();
-			System.err.println ("also you suck?!?!??!?!??!!??!");
+		} catch (Exception e) {
+			System.out.println (e);
+			System.out.println ("also you suck?!?!??!?!??!!??!");
 		}
 	%>
 

@@ -43,9 +43,8 @@ id SERIAL PRIMARY KEY,
 customer BIGINT UNSIGNED,
 product BIGINT UNSIGNED,
 season TEXT,
-amount INTEGER,
-creditcard TEXT NOT NULL,
-today INTEGER,
 FOREIGN KEY (customer) REFERENCES USERS(id),
-FOREIGN KEY (product) REFERENCES PRODUCTS(id)
+FOREIGN KEY (product) REFERENCES PRODUCTS(id),
+amount INTEGER,
+creditcard TEXT NOT NULL
 );

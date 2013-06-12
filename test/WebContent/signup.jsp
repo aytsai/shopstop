@@ -49,9 +49,23 @@ body {
 <!--[if lt IE 9]>
       <script src="../assets/js/html5shiv.js"></script>
     <![endif]-->
-
+    
+	<script type = "text/javascript">
+		function woahhh() {
+			if (document.getElementById("role").selectedIndex == 0) {
+				document.getElementById("sta").style.visibility = 'hidden';
+				document.getElementById("age").style.visibility = 'hidden';
+				document.getElementById("age").value = 0;
+			}
+			else {
+				document.getElementById("sta").style.visibility = 'visible';
+				document.getElementById("age").style.visibility = 'visible';
+				document.getElementById("age").value = '';
+			}
+		}
+	</script>
 </head>
-<body>
+<body onload="woahhh()">
    <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -77,7 +91,6 @@ body {
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
               <li><a href="/test/analytics.jsp">Analytics</a></li>
-              <li><a href="/test/livetable.jsp">Live Report</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
@@ -150,11 +163,11 @@ body {
 				   }%>
 			<input type="hidden" name="action" value="insert" /> <input
 				type="text" class="input-block-level" name="nam" placeholder="Name">
-			<select name="role">
-				<option value="Owner">Owner</option>
+			<select name="role" onchange="woahhh()" id="role">
+				<option value="Owner">Owner</option>	
 				<option value="Customer">Customer</option>
 			</select> <input type="text" class="input-block-level" name="age"
-				placeholder="Age"> <select name="sta">
+				placeholder="Age" id="age"> <select name="sta" id="sta">
 				<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
 				<option value="AZ">Arizona</option>

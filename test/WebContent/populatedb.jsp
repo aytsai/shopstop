@@ -17,9 +17,9 @@
 Connection conn = null;
 
 try {
-	int TOTALCUSTOMERS = 12;
-	int TOTALPRODUCTS = 1000;
-	int TOTALPURCHASES = 10000;
+	int TOTALCUSTOMERS = 500;
+	int TOTALPRODUCTS = 10000;
+	int TOTALPURCHASES = 100000;
 	
 	Class.forName("com.mysql.jdbc.Driver");
 
@@ -40,11 +40,11 @@ try {
 			"NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", 
 			"WV", "WI", "WY"};
 	String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
-	String[] CATEGORIES = {"chair", "table", "computer", "keyboard", "burger", "french fries",
-	        "bike", "helmet", "couch", "mouse", "dog", "cat", "fish", "cell phone", "sweater", "pants", "shirt", "underwear",
+	String[] CATEGORIES = {"chair", "table", "computer", "keyboard", "burger", "frenchfries",
+	        "bike", "helmet", "couch", "mouse", "dog", "cat", "fish", "cellphone", "sweater", "pants", "shirt", "underwear",
 	        "sandwich", "bagel", "glove", "hat", "wheel", "car", "jacket", "coat", "monitor", "pen", "pencil", "paper", "notebook",
 	        "backpack", "umbrella", "surfboard", "box", "cabinet", "trunk", "shoe", "sandal", "glasses", "hoodie",
-	        "flowers", "sponge", "mystery object", "spaghetti sauce", "beef", "fish", "pork", "shrimp", "scallops"};
+	        "flowers", "sponge", "mysteryobject", "spaghettisauce", "beef", "fish", "pork", "shrimp", "scallops"};
 	String[] ADJECTIVES = {"smelly", "old", "antiquated", "tall", "short", "narrow", 
 			"wide", "hoodrat", "turrible", "indestructible", "sexy", "invisible", "barf-inducing", "rustic", 
 			"slimy", "hairy", "new", "sparkly", "ugly", "pretty", "perfect", "impeccable", "scratched", "moldy", "wet",
@@ -67,7 +67,7 @@ try {
 	String state = null;
 	String name = null;
 	int age = 0;
-
+	
 	for (int i=0; i < TOTALCUSTOMERS; i++){
 		pstmt = conn.prepareStatement("INSERT INTO USERS (nam, role, age, sta) VALUES (?, ?, ?, ?)");
 		if (i == 0){
@@ -106,13 +106,12 @@ try {
     }
     
     for (int i=0; i<TOTALPURCHASES; i++){
-    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, season, amount, creditcard, today) VALUES (?, ?, ?, ?, ?, ?)");
+    	pstmt = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, season, amount, creditcard) VALUES (?, ?, ?, ?, ?)");
     	pstmt.setInt(1, (int) (Math.random() * (TOTALCUSTOMERS - 1) + 2));
     	pstmt.setInt(2, (int) (Math.random() * TOTALPRODUCTS + 1));
     	pstmt.setString(3, SEASONS[(int) (Math.random() * 4)]);
     	pstmt.setInt(4, (int) (Math.random() * 10 + 1));
     	pstmt.setString(5, "3698462392342355");
-    	pstmt.setInt(6, 0);
     	int rowCount = pstmt.executeUpdate();		
     }
 	
@@ -121,8 +120,9 @@ try {
     response.sendRedirect("/test/");
 	
 	
-} catch (Throwable e) {
-	e.printStackTrace();
+} catch (Exception e) {
+	System.out.println (e);
+	System.out.println ("also you suck?!?");
 }
 
 

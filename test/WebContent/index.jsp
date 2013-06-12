@@ -30,6 +30,8 @@
       }
     </style>
     <link href="./css/bootstrap-responsive.css" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -65,7 +67,6 @@
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
               <li><a href="/test/analytics.jsp">Analytics</a></li>
-              <li><a href="/test/livetable.jsp">Live Report</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
@@ -93,6 +94,19 @@
       </footer>
 
     </div><!--/container-->
+
+    <script src="./js/bootstrap-transition.js"></script>
+    <script src="./js/bootstrap-alert.js"></script>
+    <script src="./js/bootstrap-modal.js"></script>
+    <script src="./js/bootstrap-dropdown.js"></script>
+    <script src="./js/bootstrap-scrollspy.js"></script>
+    <script src="./js/bootstrap-tab.js"></script>
+    <script src="./js/bootstrap-tooltip.js"></script>
+    <script src="./js/bootstrap-popover.js"></script>
+    <script src="./js/bootstrap-button.js"></script>
+    <script src="./js/bootstrap-collapse.js"></script>
+    <script src="./js/bootstrap-carousel.js"></script>
+    <script src="./js/bootstrap-typeahead.js"></script>
 
   </body>
 </html>

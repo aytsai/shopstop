@@ -63,7 +63,6 @@
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
               <li><a href="/test/analytics.jsp">Analytics</a></li>
-              <li><a href="/test/livetable.jsp">Live Report</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
@@ -83,6 +82,7 @@
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
+		PreparedStatement pstmt3 = null;
 		Statement statement = null;
 		ResultSet rs = null;
 		ResultSet rs2 = null;
@@ -116,17 +116,15 @@
 						pstmt.execute();
 						rs2 = pstmt.getResultSet();
 						while (rs2.next()){
-							pstmt2 = conn.prepareStatement("INSERT INTO PURCHASES (customer, product, season, amount, creditcard, today) VALUES (?, ?, ?, ?, ?, ?) ");
-							pstmt2.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
-							pstmt2.setInt(2, Integer.parseInt(rs2.getString("product")));
-							pstmt2.setString(3, "Spring");
-							pstmt2.setInt(4, Integer.parseInt(rs2.getString("amount")));
-							pstmt2.setString(5, request.getParameter("creditcard"));
-							pstmt2.setInt(6, 1);
-							pstmt2.executeUpdate();
+							pstmt3 = conn.prepareStatement("INSERT INTO cse135.PURCHASES (customer, product, amount, creditcard) VALUES (?, ?, ?, ?) ");
+							pstmt3.setInt(1, Integer.parseInt(session.getAttribute("userid").toString()));
+							pstmt3.setInt(2, Integer.parseInt(rs2.getString("product")));
+							pstmt3.setInt(3, Integer.parseInt(rs2.getString("amount")));
+							pstmt3.setString(4, request.getParameter("creditcard"));
+							pstmt3.executeUpdate();
 						}
 						conn.commit();
-						conn.setAutoCommit(false);
+						conn.setAutoCommit(true);
 						response.sendRedirect("/test/purchase.jsp");
 					}
 					%>
@@ -191,8 +189,9 @@
 			productName.close();
 			statement.close();
 			conn.close();
-		} catch (Throwable e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println (e);
+			System.out.println ("also you suck?!!?!?!?!??!");
 		}
 	%>
 

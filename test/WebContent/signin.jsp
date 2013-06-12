@@ -79,7 +79,6 @@ body {
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
               <li><a href="/test/analytics.jsp">Analytics</a></li>
-              <li><a href="/test/livetable.jsp">Live Report</a></li>
               <% } %>
               <li><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
@@ -145,6 +144,7 @@ body {
 	            		ResultSet resultSet2 = check2.getResultSet(); //result set for records
 						resultSet2.next();
 	            		session.setAttribute("userid", resultSet2.getInt("id"));
+	            		session.setAttribute("st", resultSet2.getString("sta"));
 	                	response.sendRedirect("/test/");
 	                }
 			    }

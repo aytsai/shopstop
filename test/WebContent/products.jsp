@@ -30,6 +30,8 @@
       }
     </style>
     <link href="./css/bootstrap-responsive.css" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="./js/productsajax.js" type="text/javascript"></script>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -64,7 +66,6 @@
               <% if (session.getAttribute("role").equals("Owner")){ %>
               <li><a href="/test/category.jsp">Categories</a></li>
               <li><a href="/test/analytics.jsp">Analytics</a></li>
-              <li><a href="/test/livetable.jsp">Live Report</a></li>
               <% } %>
               <li class="active"><a href="/test/products.jsp">Products</a></li>
               <% if (session.getAttribute("role").equals("Customer")){ %>
@@ -79,7 +80,7 @@
       </div>
     </div>
 
-	<%@ page import="java.sql.*"%>
+	<%@ page import="java.sql.*, org.json.simple.JSONObject"%>
 	<%
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -153,7 +154,7 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
-						response.sendRedirect("/test/products.jsp");
+						
 		            }
 					if (action != null && action.equals("update")) {
 						conn.setAutoCommit(false);
@@ -176,7 +177,6 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
-						response.sendRedirect("/test/products.jsp");
 					}
 		            if (action != null && action.equals("delete")) {
 						conn.setAutoCommit(false);
@@ -185,7 +185,6 @@
 						int rowCount = pstmt.executeUpdate();
 						conn.commit();
 						conn.setAutoCommit(true);
-						response.sendRedirect("/test/products.jsp");
 					}
 		            PreparedStatement check5 = conn.prepareStatement(
 	                		"SELECT * FROM CATEGORY");
@@ -206,8 +205,12 @@
 					<input value="" name="nam" size="10"/>
 					<td><input type="submit" value="Search" /></td>
 				</form>
+				
+				<div id="alert">
+				</div>
 			
-				<table border="1">
+				<table id="productTable" border="1">
+				<tbody id="products">
 	            <tr>
 	                <th>ID</th>
 	                <th>Name</th>
@@ -217,21 +220,21 @@
 	            </tr>
 	
 	            <tr>
-	                <form action="products.jsp" method="POST">
-	                    <input type="hidden" name="action" value="insert"/>
+	                <!--<form action="products.jsp" method="POST">
+	                    <input type="hidden" name="action" value="insert"/>-->
 	                    <th>&nbsp;</th>
-	                    <th><input value="" name="nam" size="10"/></th>
-	                    <th><input value="" name="sku" size="15"/></th>
+	                    <th><input id="nam" value="" name="nam" size="10"/></th>
+	                    <th><input id="sku" value="" name="sku" size="15"/></th>
 	                    <!--<th><input value="" name="category" size="15"/></th>-->
-	                    <th><select name="category">
+	                    <th><select id="category" name="category">
 	                    <% check5 = conn.prepareStatement("SELECT * FROM CATEGORY");
 			               check5.execute();
 	                       resultSet5 = check5.getResultSet(); 
 	                       while (resultSet5.next()) {
 	                       		out.println ("<option value=\"" + resultSet5.getString("nam") + "\">" + resultSet5.getString("nam") + "</option>");
 	                       } %></th>
-	                    <th><input value="" name="price" size="15"/></th>
-	                    <th><input type="submit" value="Insert"/></th>
+	                    <th><input id="price" value="" name="price" size="15"/></th>
+	                    <th><input onclick="productsAction(1, 'insert');" type="button" value="Insert"/></th>
 	                </form>
 	            </tr>
 			 <%
@@ -239,13 +242,13 @@
 				while (rs.next()) {
 		%>
 
-		<tr>
+		<tr id ="id_<%= rs.getInt("id")%>">
 			<form action="products.jsp" method="POST">
 				<input type="hidden" name="action" value="update" />
 				<input type="hidden" name="id" value="<%=rs.getInt("id")%>" />
 				<td><%=rs.getInt("id")%></td>
-				<td><input value="<%=rs.getString("name")%>" name="nam" size="15" /></td>
-				<td><input value="<%=rs.getString("sku")%>" name="sku" size="15" /></td>
+				<td><input id="nam_<%=rs.getInt("id") %>" value="<%=rs.getString("name")%>" name="nam" size="15" /></td>
+				<td><input id="sku_<%=rs.getInt("id") %>" value="<%=rs.getString("sku")%>" name="sku" size="15" /></td>
 				<%	PreparedStatement check4 = conn.prepareStatement(
 		        		"SELECT * FROM CATEGORY WHERE id='" +
 		        		rs.getInt("cat") + "'");
@@ -253,32 +256,29 @@
 					ResultSet resultSet4 = check4.getResultSet(); //result set for records
 					resultSet4.next();
 				%>
-				<th><select name="category">
+				<th><select id="category_<%= rs.getInt("id")%>" name="category">
 	            <% check5 = conn.prepareStatement("SELECT * FROM CATEGORY");
 		               check5.execute();
                        resultSet5 = check5.getResultSet(); 
                        while (resultSet5.next()) {
                     	   if (resultSet5.getString("nam").equals(resultSet4.getString("nam")))
-                       			out.println ("<option selected=\"selected\" value>" + resultSet5.getString("nam") + "</option>");
+                    		   out.println ("<option selected=\"selected\" value=\"" + resultSet5.getString("nam") + "\">" + resultSet5.getString("nam") + "</option>");
                     	   else
-                    		    out.println ("<option value>" + resultSet5.getString("nam") + "</option>");
+                    		    out.println ("<option value=\"" + resultSet5.getString("nam") + "\">" + resultSet5.getString("nam") + "</option>");
 	             } %></th>
-				<td><input value="<%=rs.getInt("price")%>" name="price" size="15" /></td>
+				<td><input id="price_<%= rs.getInt("id")%>"value="<%=rs.getInt("price")%>" name="price" size="15" /></td>
 		<%   if (resultSet4.getInt("own") == (Integer) session.getAttribute("userid")) { %>
-				<td><input type="submit" value="Update"></td>
+				<td><input onClick="productsAction('<%=rs.getInt("id") %>', 'update');" type="button" value="Update"></td>
 		<%   } %>
 			</form>
-			<form action="products.jsp" method="POST">
-				<input type="hidden" name="action" value="delete" /> <input
-					type="hidden" value="<%=rs.getInt("id")%>" name="id" />
 		<%   if (resultSet4.getInt("own") == (Integer) session.getAttribute("userid")) { %>
-				<td><input type="submit" value="Delete" /></td>
+				<td><input onClick="productsAction('<%= rs.getInt("id") %>', 'delete');" type="button" value="Delete" /></td>
 		<%   } %>
-			</form>
 		</tr>
 		<%
 			}
 		%>
+		</tbody>
 		</table>
 		<%
 				}
@@ -303,5 +303,17 @@
 			System.out.println ("also you suck?!?");
 		}
 	%>
+    <script src="./js/bootstrap-transition.js"></script>
+    <script src="./js/bootstrap-alert.js"></script>
+    <script src="./js/bootstrap-modal.js"></script>
+    <script src="./js/bootstrap-dropdown.js"></script>
+    <script src="./js/bootstrap-scrollspy.js"></script>
+    <script src="./js/bootstrap-tab.js"></script>
+    <script src="./js/bootstrap-tooltip.js"></script>
+    <script src="./js/bootstrap-popover.js"></script>
+    <script src="./js/bootstrap-button.js"></script>
+    <script src="./js/bootstrap-collapse.js"></script>
+    <script src="./js/bootstrap-carousel.js"></script>
+    <script src="./js/bootstrap-typeahead.js"></script>
 </body>
 </html>
