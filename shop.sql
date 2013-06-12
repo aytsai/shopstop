@@ -1,0 +1,43 @@
+CREATE TABLE PURCHASES ( 
+	id SERIAL PRIMARY KEY, 
+	customer BIGINT UNSIGNED, 
+	product BIGINT UNSIGNED, 
+	FOREIGN KEY (customer) REFERENCES USERS(id), 
+	FOREIGN KEY (product) REFERENCES PRODUCTS(id), 
+	amount INTEGER,
+	creditcard TEXT NOT NULL
+);
+
+CREATE TABLE SHOPPINGCART (
+	id SERIAL PRIMARY KEY,
+	customer BIGINT UNSIGNED,
+	product BIGINT UNSIGNED,
+	amount INTEGER,
+	FOREIGN KEY (customer) REFERENCES USERS(id),
+	FOREIGN KEY (product) REFERENCES PRODUCTS(id)
+);
+
+CREATE TABLE USERS (
+    id    SERIAL PRIMARY KEY,
+    nam   TEXT NOT NULL,
+    role  TEXT,
+    age   INTEGER NOT NULL,
+    sta   TEXT
+);
+
+CREATE TABLE PRODUCTS (
+    id    SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    sku varchar(40) UNIQUE,
+    cat BIGINT UNSIGNED,
+    price INTEGER NOT NULL,
+    FOREIGN KEY (cat) REFERENCES CATEGORY(id)
+);
+
+CREATE TABLE CATEGORY (
+    id    SERIAL PRIMARY KEY,
+    nam   TEXT NOT NULL,
+    description  TEXT,
+    own BIGINT UNSIGNED, // serial = bigint unsigned
+    FOREIGN KEY (own) REFERENCES users(id)
+);
